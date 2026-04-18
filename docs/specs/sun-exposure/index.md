@@ -25,7 +25,7 @@ The app MUST calculate sun position using the **SunCalc** library (`suncalc` npm
 - The app MUST compute sunrise and sunset times for each day in the forecast window
 - The app MUST compute solar noon and total daylight hours
 - The app SHOULD compute sun altitude at hourly intervals for UV intensity weighting
-- All times MUST be in the pool's local timezone (derived from coordinates)
+- All times MUST be in the pool's local timezone. Timezone MUST be sourced from Open-Meteo's `timezone=auto` response and cached. Offline fallback SHOULD use the last-known timezone or the browser's local timezone, with a UI indicator
 
 #### Scenario: Daylight hours calculation
 
@@ -123,7 +123,7 @@ Where `cloud_cover` is the average daily cloud cover percentage (0-100).
 The app MUST apply a tree canopy reduction factor to the effective solar exposure.
 
 ```
-tree_factor = 1 - (canopy_percent / 100) ^ 0.7
+tree_factor = 1 - (canopy_percent / 100) ** 0.7
 ```
 
 This power-law model reflects that sparse canopy transmits proportionally more light than dense canopy blocks:

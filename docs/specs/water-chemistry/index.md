@@ -241,7 +241,7 @@ interface WaterTest {
 
 - **GIVEN** the user just tested their pool with a test strip
 - **WHEN** they log FC = 3.5 and pH = 7.4
-- **THEN** a test result is created with those two values, all other fields null, timestamp = now
+- **THEN** a test result is created with those two values, all other optional chemistry fields omitted, timestamp = now
 
 #### Scenario: Comprehensive test
 
@@ -268,12 +268,6 @@ The app MUST display test history for each pool.
 
 The app MUST calculate how much chlorine product to add to reach a target FC level.
 
-**Core formula:**
-
-```
-product_oz = (volume_gal × ppm_increase) / (strength_factor × 10)
-```
-
 **Dosing constants by chlorine source** (amount per +1 ppm per 10,000 gallons):
 
 | Source | Available Cl | Fl oz / +1 ppm / 10K gal | CYA added / 10 ppm Cl |
@@ -295,9 +289,9 @@ product_oz = (volume_gal × ppm_increase) / (strength_factor × 10)
 
 - **GIVEN** a 15,000 gallon pool using 12.5% liquid chlorine with current FC = 2.0 and target FC = 5.0
 - **WHEN** the dosing calculator runs
-- **THEN** ppm_increase = 3.0, product = (15000 × 3.0) / (12.5 × 10) = 360 fl oz = 2.8 gallons... Actually:
+- **THEN** ppm_increase = 3.0
   - Per 10K gal for +1 ppm = 10.7 fl oz
-  - For 15K gal and +3 ppm = 10.7 × 1.5 × 3 = 48.2 fl oz ≈ 3 pints
+  - For 15K gal and +3 ppm = 10.7 × 1.5 × 3 = 48.2 fl oz ≈ 0.38 gallons
 
 #### Scenario: Trichlor with CYA warning
 
@@ -401,10 +395,10 @@ interface DecayParameters {
 Core functions in `lib/chemistry/`:
 
 1. `calculateFcTarget(cya: number)` → `{ min, target, max, slamLevel }`
-2. `calculateDecayRate(cya, tempF, effectiveGhi)` → `DecayParameters`
+2. `calculateDecayRate(cya, tempC, effectiveGhi)` → `DecayParameters`
 3. `predictFc(fc0, k, hours)` → predicted FC at time t
 4. `calculateDose(volumeGal, currentFc, targetFc, source)` → product amount + units
-5. `calculateLsi(ph, ta, ch, tempF, tds)` → LSI value
+5. `calculateLsi(ph, ta, ch, tempC, tds)` → LSI value
 6. `calculateShockDose(fc, cc, cya, volumeGal, source)` → shock product amount
 7. `learnDecayRate(tests: WaterTest[], modelK: number)` → blended k
 8. `evaluateChemistry(pool, latestTests, sunExposure)` → `ChemistryStatus`

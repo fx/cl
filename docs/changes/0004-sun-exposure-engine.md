@@ -79,9 +79,9 @@ The engine MUST degrade gracefully when offline.
   - **Why:** Weather data is time-sensitive (1-hour TTL). Persisting stale forecasts across sessions would be misleading.
   - **Alternatives considered:** localStorage cache with TTL (adds complexity, stale data risk)
 
-- **Decision:** Use daily PSH (not hourly granularity) for the initial decay model input
-  - **Why:** Simpler model, easier to reason about and test. Hourly granularity can be added later if needed.
-  - **Alternatives considered:** Hour-by-hour GHI feeding into hourly decay (more accurate but complex)
+- **Decision:** Expose hourly GHI data for the forecast simulation, but also compute daily PSH summaries for display
+  - **Why:** The chemistry forecast spec requires hourly k_uv values from hourly sun data. The sun exposure spec's `HourlySunData` type already defines per-hour GHI. Daily PSH is computed from hourly data for the UI summary.
+  - **Alternatives considered:** Daily-only PSH (simpler but insufficient for the hourly decay simulation)
 
 ### Non-Goals
 
