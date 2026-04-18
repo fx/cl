@@ -1,0 +1,85 @@
+# Documentation Index
+# Auto-updated by /spec-writer and /project-management skills
+
+specs:
+  - name: architecture
+    path: specs/architecture/
+    description: Tech stack, project structure, data persistence, PWA configuration
+    status: active
+
+  - name: chemistry-forecast
+    path: specs/chemistry-forecast/
+    description: 7-day chlorine prediction engine, dose scheduling, and dashboard
+    status: active
+
+  - name: pool-management
+    path: specs/pool-management/
+    description: Pool CRUD, geolocation, map display, and pool properties
+    status: active
+
+  - name: sun-exposure
+    path: specs/sun-exposure/
+    description: Solar radiation engine using SunCalc and Open-Meteo for UV estimation
+    status: active
+
+  - name: water-chemistry
+    path: specs/water-chemistry/
+    description: Chemistry model, test logging, chlorine decay, dosing calculations
+    status: active
+
+changes:
+  - id: "0001"
+    name: project-scaffolding
+    path: changes/0001-project-scaffolding.md
+    description: Bootstrap Bun/Vite/React/@fx/ui/Biome/Vitest/PWA project
+    spec: architecture
+    status: draft
+    depends_on: []
+
+  - id: "0002"
+    name: pool-crud
+    path: changes/0002-pool-crud.md
+    description: Pool creation, editing, deletion, list view with localStorage
+    spec: pool-management
+    status: draft
+    depends_on: ["0001"]
+
+  - id: "0003"
+    name: geolocation-and-map
+    path: changes/0003-geolocation-and-map.md
+    description: Interactive map location picker and static pool map display
+    spec: pool-management
+    status: draft
+    depends_on: ["0002"]
+
+  - id: "0004"
+    name: sun-exposure-engine
+    path: changes/0004-sun-exposure-engine.md
+    description: SunCalc + Open-Meteo integration for effective sun hours calculation
+    spec: sun-exposure
+    status: draft
+    depends_on: ["0002"]
+
+  - id: "0005"
+    name: water-chemistry-model
+    path: changes/0005-water-chemistry-model.md
+    description: Chlorine decay model, FC/CYA table, dosing calculator, test logging UI
+    spec: water-chemistry
+    status: draft
+    depends_on: ["0002"]
+
+  - id: "0006"
+    name: chemistry-forecast
+    path: changes/0006-chemistry-forecast.md
+    description: 7-day hourly FC simulation, dose scheduling, NextAction engine
+    spec: chemistry-forecast
+    status: draft
+    depends_on: ["0004", "0005"]
+
+  - id: "0007"
+    name: forecast-dashboard-ui
+    path: changes/0007-forecast-dashboard-ui.md
+    description: Dashboard with NextAction card, FC chart, dose schedule, status bar
+    spec: chemistry-forecast
+    status: draft
+    depends_on: ["0003", "0006"]
