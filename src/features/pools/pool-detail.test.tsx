@@ -67,12 +67,14 @@ describe("PoolDetail", () => {
 		expect(screen.getByText("Test notes")).toBeInTheDocument();
 	});
 
-	it("renders edit button", () => {
+	it("renders edit and log test buttons", () => {
 		act(() => {
 			useAppStore.getState().addPool(testPool);
 		});
 		render(<PoolDetail />);
 		expect(screen.getByText("Edit")).toBeInTheDocument();
+		expect(screen.getByText("Log Test")).toBeInTheDocument();
+		expect(screen.getByText("History")).toBeInTheDocument();
 	});
 
 	it("renders delete button", () => {
@@ -83,13 +85,21 @@ describe("PoolDetail", () => {
 		expect(screen.getByText("Delete")).toBeInTheDocument();
 	});
 
-	it("renders chemistry and forecast placeholders", () => {
+	it("renders chemistry and forecast sections", () => {
 		act(() => {
 			useAppStore.getState().addPool(testPool);
 		});
 		render(<PoolDetail />);
 		expect(screen.getByText("Water Chemistry")).toBeInTheDocument();
 		expect(screen.getByText("Forecast")).toBeInTheDocument();
+	});
+
+	it("shows log first test link when no tests", () => {
+		act(() => {
+			useAppStore.getState().addPool(testPool);
+		});
+		render(<PoolDetail />);
+		expect(screen.getByText(/Log your first test/)).toBeInTheDocument();
 	});
 
 	it("renders location coordinates", () => {
@@ -113,10 +123,8 @@ describe("PoolDetail", () => {
 			useAppStore.getState().addPool(testPool);
 		});
 		render(<PoolDetail />);
-		// Click the trigger to open dialog
 		const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
 		fireEvent.click(deleteButtons[0]);
-		// After dialog opens, a second Delete button appears as the confirm action
 		const allDeleteButtons = screen.getAllByRole("button", { name: "Delete" });
 		const confirmButton = allDeleteButtons[allDeleteButtons.length - 1];
 		fireEvent.click(confirmButton);
@@ -130,5 +138,30 @@ describe("PoolDetail", () => {
 		});
 		render(<PoolDetail />);
 		expect(screen.queryByText("Notes")).not.toBeInTheDocument();
+	});
+
+	it("shows chemistry status when tests exist", () => {
+		act(() => {
+			useAppStore.getState().addPool(testPool);
+			useAppStore.getState().addTestResult("pool-1", {
+				id: "t1",
+				poolId: "pool-1",
+				testedAt: "2026-01-01T12:00:00Z",
+				createdAt: "2026-01-01T12:00:00Z",
+				fc: 5,
+				ph: 7.4,
+				cya: 40,
+			});
+		});
+		render(<PoolDetail />);
+		expect(screen.getByText(/FC 5/)).toBeInTheDocument();
+	});
+
+	it("renders dosing calculator", () => {
+		act(() => {
+			useAppStore.getState().addPool(testPool);
+		});
+		render(<PoolDetail />);
+		expect(screen.getByText("Dosing Calculator")).toBeInTheDocument();
 	});
 });

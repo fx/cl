@@ -44,12 +44,55 @@ export interface Pool {
 export interface WaterTest {
 	id: string;
 	poolId: PoolId;
-	timestamp: string;
-	freeChlorine: number;
-	totalChlorine: number;
-	ph: number;
-	alkalinity: number;
-	cyanuricAcid: number;
+	testedAt: string;
+	createdAt: string;
+
+	// Primary (all optional — user logs what they test)
+	fc?: number;
+	cc?: number;
+	ph?: number;
+	cya?: number;
+	ta?: number;
+	ch?: number;
+
+	// Secondary
+	tempF?: number;
+	tds?: number;
+	salt?: number;
+	phosphates?: number;
+
+	// Context
+	notes?: string;
+}
+
+export interface ChemistryStatus {
+	poolId: string;
+	computedAt: string;
+	currentFc: number | null;
+	currentPh: number | null;
+	currentCya: number | null;
+	fcStatus: "ok" | "low" | "critical" | "high";
+	phStatus: "ok" | "low" | "high";
+	lsi: number | null;
+	lsiStatus: "corrosive" | "balanced" | "scaling" | null;
+	fcCyaRatio: number | null;
+	recommendations: Recommendation[];
+}
+
+export interface Recommendation {
+	type: "dose" | "shock" | "test" | "warning";
+	priority: "info" | "warning" | "urgent";
+	title: string;
+	description: string;
+	productAmount?: string;
+}
+
+export interface DecayParameters {
+	kUvBase: number;
+	kDemand: number;
+	kObservedAvg: number | null;
+	kEffective: number;
+	alpha: number;
 }
 
 export interface UserPreferences {
