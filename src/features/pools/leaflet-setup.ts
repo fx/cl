@@ -5,7 +5,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 /* v8 ignore next 2 */
 // biome-ignore lint/performance/noDelete: required to override Leaflet's default icon URL resolution
-delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 
 L.Icon.Default.mergeOptions({
 	iconUrl: markerIcon,
