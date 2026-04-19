@@ -55,13 +55,13 @@ export function ForecastChart({
 	targetMax,
 	now,
 }: ForecastChartProps) {
-	const doseTimeSet = new Set(doseEvents.map((d) => d.time));
+	const doseTimeMap = new Map(doseEvents.map((d) => [d.time, d]));
 
 	// Sample every 3 hours for readability
 	const data: ChartDataPoint[] = hourly
-		.filter((_, i) => i % 3 === 0 || doseTimeSet.has(hourly[i].time))
+		.filter((_, i) => i % 3 === 0 || doseTimeMap.has(hourly[i].time))
 		.map((h) => {
-			const dose = doseEvents.find((d) => d.time === h.time);
+			const dose = doseTimeMap.get(h.time);
 			return {
 				time: h.time,
 				label: formatHourLabel(h.time),
@@ -77,17 +77,6 @@ export function ForecastChart({
 	const nowIso = now.toISOString();
 	const nowIndex = data.findIndex((d) => d.time >= nowIso);
 	const nowLabel = nowIndex >= 0 ? data[nowIndex].label : null;
-
-	// Build x-axis ticks — one per day
-	const dayTicks: string[] = [];
-	const seen = new Set<string>();
-	for (const d of data) {
-		const dayKey = d.time.slice(0, 10);
-		if (!seen.has(dayKey)) {
-			seen.add(dayKey);
-			dayTicks.push(d.label);
-		}
-	}
 
 	const yMax = Math.max(targetMax + 2, ...data.map((d) => d.predictedFc + 1));
 

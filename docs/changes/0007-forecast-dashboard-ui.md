@@ -128,26 +128,26 @@ The dashboard MUST work on mobile screens (320px+).
 
 ## Tasks
 
-- [ ] Build `NextActionCard` component — renders dose/test/ok states with appropriate colors (red/yellow/green), icons, and CTA buttons
-- [ ] Build `ForecastChart` component — Recharts line chart with:
-  - [ ] FC prediction line (primary)
-  - [ ] Target range as shaded green Area
-  - [ ] Minimum FC as red dashed ReferenceLine
-  - [ ] Dose events as custom dot markers with tooltips
-  - [ ] "Now" vertical line indicator
-  - [ ] Day labels on x-axis
-  - [ ] ResponsiveContainer for mobile
-- [ ] Build `DoseSchedule` component — list of upcoming DoseEvents with date, amount, FC before/after
-- [ ] Build `ChemistryStatusBar` component — compact FC/pH/CYA indicators with color coding
-- [ ] Build `WarningBanner` component — dismissible Alert for CYA, stale test, pH warnings
-- [ ] Build `ParameterAlerts` component — secondary cards for pH, TA, CH, LSI issues
-- [ ] Build `ForecastDashboard` container — composes all above components, calls useForecast hook
-- [ ] Integrate ForecastDashboard into PoolDetail view (replace placeholder)
-- [ ] Add "Log test" and "Calculate dose" quick-action buttons to dashboard
+- [x] Build `NextActionCard` component — renders dose/test/ok states with appropriate colors (red/yellow/green), icons, and CTA buttons
+- [x] Build `ForecastChart` component — Recharts line chart with:
+  - [x] FC prediction line (primary)
+  - [x] Target range as shaded green Area
+  - [x] Minimum FC as red dashed ReferenceLine
+  - [x] Dose events as custom dot markers with tooltips
+  - [x] "Now" vertical line indicator
+  - [x] Day labels on x-axis
+  - [x] ResponsiveContainer for mobile
+- [x] Build `DoseSchedule` component — list of upcoming DoseEvents with date, amount, FC before/after
+- [x] Build `ChemistryStatusBar` component — compact FC/pH/CYA indicators with color coding
+- [x] Build `WarningBanner` component — dismissible Alert for CYA, stale test, pH warnings
+- [x] Build `ParameterAlerts` component — secondary cards for pH, TA, CH, LSI issues
+- [x] Build `ForecastDashboard` container — composes all above components, calls useForecast hook
+- [x] Integrate ForecastDashboard into PoolDetail view (replace placeholder)
+- [x] Add "Log test" and "Calculate dose" quick-action buttons to dashboard
 - [ ] Ensure responsive layout works at 320px, 375px, 768px, 1024px breakpoints
-- [ ] Write component tests for NextActionCard (all 3 states render correctly)
-- [ ] Write component tests for ForecastChart (renders with mock forecast data)
-- [ ] Write visual/snapshot tests for dashboard layout
+- [x] Write component tests for NextActionCard (all 3 states render correctly)
+- [x] Write component tests for ForecastChart (renders with mock forecast data)
+- [x] Write visual/snapshot tests for dashboard layout
 
 ## Open Questions
 

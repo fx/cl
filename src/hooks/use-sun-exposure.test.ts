@@ -1,14 +1,7 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { Pool, SunExposureResult } from "../types";
+import type { Pool } from "../types";
 import { useSunExposure } from "./use-sun-exposure";
-
-const mockResult: SunExposureResult = {
-	poolId: "pool-1",
-	fetchedAt: "2026-04-19T12:00:00Z",
-	dataSource: "fallback",
-	daily: [],
-};
 
 vi.mock("../lib/solar", () => ({
 	computeSunExposure: vi.fn().mockResolvedValue({
@@ -62,7 +55,7 @@ describe("useSunExposure", () => {
 	it("resets data when pool changes to null", async () => {
 		const { result, rerender } = renderHook(
 			({ pool }: { pool: Pool | null }) => useSunExposure(pool),
-			{ initialProps: { pool: testPool } },
+			{ initialProps: { pool: testPool } as { pool: Pool | null } },
 		);
 
 		await waitFor(() => {

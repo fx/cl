@@ -6,7 +6,9 @@ import type { Pool, SunExposureResult } from "../types";
  * Fetch and cache sun exposure data for a pool.
  * Returns null while loading.
  */
-export function useSunExposure(pool: Pool | null): SunExposureResult | null {
+export function useSunExposure(
+	pool: Pool | null | undefined,
+): SunExposureResult | null {
 	const [data, setData] = useState<SunExposureResult | null>(null);
 
 	useEffect(() => {
@@ -16,10 +18,15 @@ export function useSunExposure(pool: Pool | null): SunExposureResult | null {
 		}
 
 		let cancelled = false;
+		setData(null);
 
-		computeSunExposure(pool).then((result) => {
-			if (!cancelled) setData(result);
-		});
+		computeSunExposure(pool)
+			.then((result) => {
+				if (!cancelled) setData(result);
+			})
+			.catch(() => {
+				if (!cancelled) setData(null);
+			});
 
 		return () => {
 			cancelled = true;

@@ -54,24 +54,14 @@ export function NextActionCard({ nextAction, poolId }: NextActionCardProps) {
 							Add {nextAction.doseEvent.productAmount}
 						</p>
 					)}
-					<div className="mt-3 flex gap-2">
-						{nextAction.type === "dose" && (
-							<>
-								{/* @ts-expect-error @fx/ui Button children type */}
-								<Button asChild size="sm">
-									<Link href={`/pools/${poolId}/test`}>Log Test</Link>
-								</Button>
-							</>
-						)}
-						{nextAction.type === "test" && (
-							<>
-								{/* @ts-expect-error @fx/ui Button children type */}
-								<Button asChild size="sm">
-									<Link href={`/pools/${poolId}/test`}>Log Test</Link>
-								</Button>
-							</>
-						)}
-					</div>
+					{(nextAction.type === "dose" || nextAction.type === "test") && (
+						<div className="mt-3 flex gap-2">
+							{/* @ts-expect-error @fx/ui Button children type */}
+							<Button asChild size="sm">
+								<Link href={`/pools/${poolId}/test`}>Log Test</Link>
+							</Button>
+						</div>
+					)}
 				</div>
 			</CardContent>
 		</Card>

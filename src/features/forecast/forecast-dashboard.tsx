@@ -142,7 +142,7 @@ export function ForecastDashboard({
 				</Button>
 				{/* @ts-expect-error @fx/ui Button children type */}
 				<Button asChild variant="outline" size="sm">
-					<Link href={`/pools/${pool.id}`}>Calculate Dose</Link>
+					<Link href={`/pools/${pool.id}/dose`}>Calculate Dose</Link>
 				</Button>
 			</div>
 
