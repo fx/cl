@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { getSunTimes } from "./suncalc";
 import { buildFallbackDay, calculateCMF, estimatePSH } from "./fallback";
 
 describe("estimatePSH", () => {
 	it("returns a reasonable PSH for Phoenix summer", () => {
 		const date = new Date("2026-06-21T12:00:00");
-		const psh = estimatePSH(date, 33.4484, -112.074);
+		const sunTimes = getSunTimes(date, 33.4484, -112.074);
+		const psh = estimatePSH(sunTimes, 33.4484, -112.074);
 
 		expect(psh).toBeGreaterThan(4);
 		expect(psh).toBeLessThan(9);
@@ -12,7 +14,8 @@ describe("estimatePSH", () => {
 
 	it("returns lower PSH for Seattle winter", () => {
 		const date = new Date("2026-12-21T12:00:00");
-		const psh = estimatePSH(date, 47.6062, -122.3321);
+		const sunTimes = getSunTimes(date, 47.6062, -122.3321);
+		const psh = estimatePSH(sunTimes, 47.6062, -122.3321);
 
 		expect(psh).toBeGreaterThan(0.5);
 		expect(psh).toBeLessThan(4);
@@ -20,7 +23,8 @@ describe("estimatePSH", () => {
 
 	it("returns higher PSH for equator equinox", () => {
 		const date = new Date("2026-03-21T12:00:00");
-		const psh = estimatePSH(date, 0, 0);
+		const sunTimes = getSunTimes(date, 0, 0);
+		const psh = estimatePSH(sunTimes, 0, 0);
 
 		expect(psh).toBeGreaterThan(3);
 		expect(psh).toBeLessThan(6);
@@ -28,7 +32,8 @@ describe("estimatePSH", () => {
 
 	it("returns 0 when sun never rises (polar night)", () => {
 		const date = new Date("2026-12-21T12:00:00");
-		const psh = estimatePSH(date, 75, 0);
+		const sunTimes = getSunTimes(date, 75, 0);
+		const psh = estimatePSH(sunTimes, 75, 0);
 
 		expect(psh).toBe(0);
 	});

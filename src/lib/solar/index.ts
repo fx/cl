@@ -79,21 +79,15 @@ export async function computeSunExposure(
 			return buildFallbackDay(date, latitude, longitude);
 		});
 
-		const treeFactor = pool.isIndoor
-			? 0
-			: calculateTreeFactor(pool.treeCoverPercent);
-
-		return {
-			poolId: pool.id,
-			fetchedAt: now,
-			dataSource: "fallback",
-			daily: daily.map((day) => ({
-				...day,
-				effectiveSunHours: pool.isIndoor
-					? 0
-					: calculateEffectiveSunHours(day.peakSunHours, treeFactor),
-			})),
-		};
+		return applyTreeFactor(
+			{
+				poolId: pool.id,
+				fetchedAt: now,
+				dataSource: "fallback",
+				daily,
+			},
+			pool,
+		);
 	}
 }
 

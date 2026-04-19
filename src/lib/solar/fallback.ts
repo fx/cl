@@ -1,15 +1,14 @@
 import type { DailySunExposure } from "../../types";
-import { getMaxSunAltitude, getSunTimes } from "./suncalc";
+import { getSunAltitude, getSunTimes, type SunTimes } from "./suncalc";
 
 const AVERAGE_CLOUD_FACTOR = 0.75;
 
-export function estimatePSH(date: Date, lat: number, lng: number): number {
-	const maxAltDeg = getMaxSunAltitude(date, lat, lng);
+export function estimatePSH(sunTimes: SunTimes, lat: number, lng: number): number {
+	const maxAltDeg = getSunAltitude(sunTimes.solarNoon, lat, lng);
 	const maxAltRad = (maxAltDeg * Math.PI) / 180;
 	const sinAlt = Math.sin(maxAltRad);
 	if (sinAlt <= 0) return 0;
 
-	const sunTimes = getSunTimes(date, lat, lng);
 	const dayLengthFraction = sunTimes.daylightHours / 24;
 
 	return 12 * sinAlt * dayLengthFraction * AVERAGE_CLOUD_FACTOR;
@@ -25,7 +24,7 @@ export function buildFallbackDay(
 	lng: number,
 ): DailySunExposure {
 	const sunTimes = getSunTimes(date, lat, lng);
-	const psh = estimatePSH(date, lat, lng);
+	const psh = estimatePSH(sunTimes, lat, lng);
 	const dateStr = date.toISOString().slice(0, 10);
 
 	return {
