@@ -83,12 +83,16 @@ describe("extractObservedRates", () => {
 
 	it("limits to last 10 pairs", () => {
 		const tests: WaterTest[] = [];
+		const baseTestedAt = new Date("2026-01-01T00:00:00Z");
 		for (let i = 0; i < 15; i++) {
 			const hour = i * 2;
 			const fc = 10 * Math.exp(-0.1 * hour);
+			const testedAt = new Date(
+				baseTestedAt.getTime() + hour * 60 * 60 * 1000,
+			).toISOString();
 			tests.push(
 				makeTest({
-					testedAt: `2026-01-01T${String(hour).padStart(2, "0")}:00:00Z`,
+					testedAt,
 					fc,
 				}),
 			);

@@ -70,7 +70,7 @@ function ChemistryCard({ chemStatus }: { chemStatus: ChemistryStatus }) {
 					<div className="space-y-1">
 						{chemStatus.recommendations.map((rec) => (
 							<div
-								key={rec.title}
+								key={`${rec.type}-${rec.priority}-${rec.title}`}
 								className={`text-sm rounded p-2 ${
 									rec.priority === "urgent"
 										? "bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200"

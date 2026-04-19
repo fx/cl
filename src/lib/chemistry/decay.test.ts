@@ -90,11 +90,11 @@ describe("temperatureFactor", () => {
 describe("calculateDecayRate", () => {
 	it("computes daytime decay: CYA=30, 85F, GHI=800", () => {
 		const result = calculateDecayRate(30, 85, 800 / 1000);
-		// k_uv = 0.14 * 0.8 = 0.112
-		expect(result.kUvBase).toBeCloseTo(0.112, 2);
+		// kUvBase = 0.14 (base rate for CYA=30)
+		expect(result.kUvBase).toBeCloseTo(0.14, 2);
 		// k_demand = 0.02 * ~1.6 = ~0.032
 		expect(result.kDemand).toBeCloseTo(0.032, 1);
-		// k_effective = 0.112 + 0.032 = 0.144
+		// k_effective = 0.14 * 0.8 + 0.032 = 0.144
 		expect(result.kEffective).toBeCloseTo(0.144, 1);
 		expect(result.kObservedAvg).toBeNull();
 		expect(result.alpha).toBe(0);
@@ -102,16 +102,21 @@ describe("calculateDecayRate", () => {
 
 	it("computes nighttime decay: no sun", () => {
 		const result = calculateDecayRate(50, 80, 0);
-		expect(result.kUvBase).toBe(0);
+		// kUvBase is the raw base rate, not scaled by sun
+		expect(result.kUvBase).toBeCloseTo(0.09, 2);
 		// k_demand only, ~0.025 at 80F
 		expect(result.kDemand).toBeCloseTo(0.025, 1);
+		// k_effective = 0.09 * 0 + 0.025 = 0.025
 		expect(result.kEffective).toBeCloseTo(0.025, 1);
 	});
 
-	it("returns 0 UV component at night", () => {
+	it("UV component does not affect kEffective at night", () => {
 		const result = calculateDecayRate(0, 77, 0);
-		expect(result.kUvBase).toBe(0);
+		// kUvBase is the raw base rate (1.2 for CYA=0)
+		expect(result.kUvBase).toBeCloseTo(1.2, 1);
+		// But kEffective only has demand since sun=0
 		expect(result.kDemand).toBeCloseTo(0.02, 3);
+		expect(result.kEffective).toBeCloseTo(0.02, 2);
 	});
 
 	it("high CYA dramatically reduces UV decay", () => {

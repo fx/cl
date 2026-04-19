@@ -76,34 +76,66 @@ export const useAppStore = create<AppState & AppActions>()(
 		}),
 		{
 			name: "cl-storage",
-			version: 2,
+			version: 3,
 			partialize: (state) => ({
 				pools: state.pools,
 				testResults: state.testResults,
 				preferences: state.preferences,
 			}),
 			migrate: (persisted, version) => {
+				// biome-ignore lint/suspicious/noExplicitAny: migration handles unknown persisted shapes
+				let state = persisted as any;
 				if (version < 2) {
-					const state = persisted as AppState;
-					return {
+					state = {
 						...state,
-						pools: (state.pools ?? []).map((p) => {
-							const partial = p as Partial<Pool> & { createdAt: string };
-							return {
-								...p,
-								surfaceType: partial.surfaceType ?? ("plaster" as const),
-								chlorineSource: partial.chlorineSource ?? ("liquid" as const),
-								treeCoverPercent: partial.treeCoverPercent ?? 0,
-								isIndoor: partial.isIndoor ?? false,
-								targetFc: partial.targetFc ?? null,
-								targetPh: partial.targetPh ?? 7.4,
-								notes: partial.notes ?? "",
-								updatedAt: partial.updatedAt ?? partial.createdAt,
-							};
-						}),
+						pools: (state.pools ?? []).map((p: Record<string, unknown>) => ({
+							...p,
+							surfaceType: p.surfaceType ?? "plaster",
+							chlorineSource: p.chlorineSource ?? "liquid",
+							treeCoverPercent: p.treeCoverPercent ?? 0,
+							isIndoor: p.isIndoor ?? false,
+							targetFc: p.targetFc ?? null,
+							targetPh: p.targetPh ?? 7.4,
+							notes: p.notes ?? "",
+							updatedAt: p.updatedAt ?? p.createdAt,
+						})),
 					};
 				}
-				return persisted as AppState & AppActions;
+				if (version < 3) {
+					const oldTests = state.testResults ?? {};
+					const migratedTests: Record<string, WaterTest[]> = {};
+					for (const [poolId, tests] of Object.entries(oldTests)) {
+						migratedTests[poolId] = (tests as Record<string, unknown>[]).map(
+							(t) =>
+								({
+									id: t.id ?? crypto.randomUUID(),
+									poolId: t.poolId ?? poolId,
+									testedAt:
+										t.testedAt ?? t.timestamp ?? new Date().toISOString(),
+									createdAt:
+										t.createdAt ?? t.timestamp ?? new Date().toISOString(),
+									fc: t.fc ?? t.freeChlorine,
+									cc:
+										t.cc ??
+										(typeof t.totalChlorine === "number" &&
+										typeof t.freeChlorine === "number"
+											? (t.totalChlorine as number) - (t.freeChlorine as number)
+											: undefined),
+									ph: t.ph,
+									cya: t.cya ?? t.cyanuricAcid,
+									ta: t.ta ?? t.totalAlkalinity,
+									ch: t.ch ?? t.calciumHardness,
+									tempF: t.tempF ?? t.temperature,
+									tds: t.tds,
+									salt: t.salt,
+									phosphates: t.phosphates,
+									notes: t.notes,
+								}) as WaterTest,
+						);
+					}
+					state = { ...state, testResults: migratedTests };
+				}
+				return state as AppState & AppActions;
 			},
 		},
 	),

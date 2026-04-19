@@ -38,7 +38,11 @@ export function calculateLsi(
 	ch: number,
 	tempF: number,
 	tds = 1000,
-): LsiResult {
+): LsiResult | null {
+	if (tds <= 0 || ta <= 0 || ch <= 0 || !Number.isFinite(tempF)) {
+		return null;
+	}
+
 	const tK = fahrenheitToKelvin(tempF);
 	const a = (Math.log10(tds) - 1) / 10;
 	const b = -13.12 * Math.log10(tK) + 34.55;

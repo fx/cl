@@ -5,7 +5,7 @@
 Implement the core chemistry model (chlorine decay, FC/CYA relationship, dosing calculator, LSI), water test logging UI, and test history view. This provides the mathematical engine and data collection that the forecast depends on.
 
 **Spec:** [Water Chemistry](../specs/water-chemistry/)
-**Status:** draft
+**Status:** implemented
 **Depends On:** 0002
 
 ## Motivation
@@ -125,29 +125,29 @@ The app SHOULD learn the pool's actual decay rate from paired FC tests.
 
 ## Tasks
 
-- [ ] Define `WaterTest`, `ChemistryStatus`, `Recommendation`, `DecayParameters` types in `src/types/`
-- [ ] Implement `lib/chemistry/fc-cya.ts` — FC/CYA lookup table, interpolation, calculateFcTarget()
-- [ ] Implement `lib/chemistry/decay.ts` — k_uv_base table, temperature_factor (Arrhenius), calculateDecayRate(), predictFc()
-- [ ] Implement `lib/chemistry/dosing.ts` — product strength constants, calculateDose(), unit formatting (fl oz, pints, gallons, oz weight)
-- [ ] Implement `lib/chemistry/lsi.ts` — calculateLsi() with all intermediate values
-- [ ] Implement `lib/chemistry/learned-rate.ts` — extract k from test pairs, rolling average, blend with model
-- [ ] Implement `lib/chemistry/evaluate.ts` — evaluateChemistry() producing status + recommendations
-- [ ] Add test result CRUD to Zustand store (addTest, deleteTest, getTestsForPool)
-- [ ] Build `TestForm` component — all parameter inputs with validation, backdate option
-- [ ] Build `TestHistory` component — reverse-chronological list with out-of-range highlighting
-- [ ] Build `TestTrendChart` component — FC and pH line charts over time using @fx/ui Chart (Recharts)
-- [ ] Build `DosingCalculator` component — standalone tool for "how much to add" calculations
-- [ ] Wire routes: `/pools/:id/test` → TestForm, `/pools/:id/history` → TestHistory
-- [ ] Write unit tests for FC/CYA calculations (all table values + interpolation)
-- [ ] Write unit tests for decay model (daytime, nighttime, varying CYA, varying temp)
-- [ ] Write unit tests for dosing calculator (all 6 chlorine sources, unit conversion)
-- [ ] Write unit tests for LSI calculation
-- [ ] Write unit tests for learned rate blending
-- [ ] Write component tests for TestForm (validation, submission)
+- [x] Define `WaterTest`, `ChemistryStatus`, `Recommendation`, `DecayParameters` types in `src/types/`
+- [x] Implement `lib/chemistry/fc-cya.ts` — FC/CYA lookup table, interpolation, calculateFcTarget()
+- [x] Implement `lib/chemistry/decay.ts` — k_uv_base table, temperature_factor (Arrhenius), calculateDecayRate(), predictFc()
+- [x] Implement `lib/chemistry/dosing.ts` — product strength constants, calculateDose(), unit formatting (fl oz, pints, gallons, oz weight)
+- [x] Implement `lib/chemistry/lsi.ts` — calculateLsi() with all intermediate values
+- [x] Implement `lib/chemistry/learned-rate.ts` — extract k from test pairs, rolling average, blend with model
+- [x] Implement `lib/chemistry/evaluate.ts` — evaluateChemistry() producing status + recommendations
+- [x] Add test result CRUD to Zustand store (addTest, deleteTest, getTestsForPool)
+- [x] Build `TestForm` component — all parameter inputs with validation, backdate option
+- [x] Build `TestHistory` component — reverse-chronological list with out-of-range highlighting
+- [x] Build `TestTrendChart` component — FC and pH line charts over time using @fx/ui Chart (Recharts)
+- [x] Build `DosingCalculator` component — standalone tool for "how much to add" calculations
+- [x] Wire routes: `/pools/:id/test` → TestForm, `/pools/:id/history` → TestHistory
+- [x] Write unit tests for FC/CYA calculations (all table values + interpolation)
+- [x] Write unit tests for decay model (daytime, nighttime, varying CYA, varying temp)
+- [x] Write unit tests for dosing calculator (all 6 chlorine sources, unit conversion)
+- [x] Write unit tests for LSI calculation
+- [x] Write unit tests for learned rate blending
+- [x] Write component tests for TestForm (validation, submission)
 
 ## Open Questions
 
-- [ ] Should the dosing calculator be accessible as a standalone page (not tied to a pool) for quick "how much bleach?" calculations? Would be useful but adds a route. Defer to post-v1.
+- [x] Should the dosing calculator be accessible as a standalone page (not tied to a pool) for quick "how much bleach?" calculations? Would be useful but adds a route. Defer to post-v1.
 
 ## References
 

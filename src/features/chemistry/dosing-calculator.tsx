@@ -67,9 +67,10 @@ export function DosingCalculator() {
 		? calculateDose(pool.volumeGallons, parsedCurrent, parsedTarget, source)
 		: null;
 
-	const sourceOptions = Object.entries(CHLORINE_SOURCE_LABELS).filter(
-		([key]) => key !== "swg",
-	) as [Exclude<ChlorineSource, "swg">, string][];
+	const sourceOptions = Object.entries(CHLORINE_SOURCE_LABELS) as [
+		ChlorineSource,
+		string,
+	][];
 
 	return (
 		<Card>

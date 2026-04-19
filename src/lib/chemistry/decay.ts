@@ -65,15 +65,15 @@ export function calculateDecayRate(
 	sunIntensityFactor: number,
 ): DecayParameters {
 	const kUvBase = getKUvBase(cya);
-	const kUv = kUvBase * sunIntensityFactor;
+	const kUvScaled = kUvBase * sunIntensityFactor;
 	const tFactor = temperatureFactor(tempF);
 	const kDemand = K_DEMAND_BASE * tFactor;
 
 	return {
-		kUvBase: kUv,
+		kUvBase,
 		kDemand,
 		kObservedAvg: null,
-		kEffective: kUv + kDemand,
+		kEffective: kUvScaled + kDemand,
 		alpha: 0,
 	};
 }

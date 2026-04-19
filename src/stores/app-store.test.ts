@@ -256,14 +256,43 @@ describe("useAppStore", () => {
 			expect(result.pools).toEqual([]);
 		});
 
-		it("returns state as-is for version 2", () => {
+		it("migrates v2 test results to v3 schema", () => {
 			const v2State = {
+				pools: [testPool],
+				testResults: {
+					"pool-1": [
+						{
+							id: "t1",
+							poolId: "pool-1",
+							timestamp: "2026-01-01T00:00:00Z",
+							freeChlorine: 5,
+							totalChlorine: 5.5,
+							ph: 7.4,
+							cyanuricAcid: 40,
+							totalAlkalinity: 100,
+						},
+					],
+				},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v2State, 2) as AppState;
+			const tests = result.testResults["pool-1"];
+			expect(tests).toHaveLength(1);
+			expect(tests[0].fc).toBe(5);
+			expect(tests[0].cc).toBeCloseTo(0.5);
+			expect(tests[0].testedAt).toBe("2026-01-01T00:00:00Z");
+			expect(tests[0].cya).toBe(40);
+			expect(tests[0].ta).toBe(100);
+		});
+
+		it("returns state as-is for version 3", () => {
+			const v3State = {
 				pools: [testPool],
 				testResults: {},
 				preferences: { units: "imperial" },
 			};
-			const result = migrate(v2State, 2);
-			expect(result).toBe(v2State);
+			const result = migrate(v3State, 3);
+			expect(result).toBe(v3State);
 		});
 	});
 });

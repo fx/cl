@@ -162,23 +162,25 @@ export function evaluateChemistry(
 			currentTempF,
 			currentTds ?? 1000,
 		);
-		lsi = lsiResult.lsi;
-		lsiStatus = lsiResult.status;
+		if (lsiResult) {
+			lsi = lsiResult.lsi;
+			lsiStatus = lsiResult.status;
 
-		if (lsiResult.status === "corrosive") {
-			recommendations.push({
-				type: "warning",
-				priority: "warning",
-				title: "Water is corrosive",
-				description: `LSI is ${lsi}. Raise pH or calcium hardness to protect surfaces.`,
-			});
-		} else if (lsiResult.status === "scaling") {
-			recommendations.push({
-				type: "warning",
-				priority: "warning",
-				title: "Water is scale-forming",
-				description: `LSI is ${lsi}. Lower pH or calcium hardness to prevent scale.`,
-			});
+			if (lsiResult.status === "corrosive") {
+				recommendations.push({
+					type: "warning",
+					priority: "warning",
+					title: "Water is corrosive",
+					description: `LSI is ${lsi}. Raise pH or calcium hardness to protect surfaces.`,
+				});
+			} else if (lsiResult.status === "scaling") {
+				recommendations.push({
+					type: "warning",
+					priority: "warning",
+					title: "Water is scale-forming",
+					description: `LSI is ${lsi}. Lower pH or calcium hardness to prevent scale.`,
+				});
+			}
 		}
 	}
 
