@@ -16,12 +16,14 @@ import {
 	CardTitle,
 } from "@fx/ui";
 import { Link, useLocation, useParams } from "wouter";
+import { useSunExposure } from "../../hooks/use-sun-exposure";
 import { evaluateChemistry } from "../../lib/chemistry/evaluate";
 import { useAppStore } from "../../stores/app-store";
 import type { ChemistryStatus, WaterTest } from "../../types";
 import { CHLORINE_SOURCE_LABELS, SURFACE_TYPE_LABELS } from "../../types";
-import { PoolMap } from "./pool-map";
 import { DosingCalculator } from "../chemistry/dosing-calculator";
+import { ForecastDashboard } from "../forecast/forecast-dashboard";
+import { PoolMap } from "./pool-map";
 
 const emptyTests: WaterTest[] = [];
 
@@ -103,6 +105,7 @@ export function PoolDetail() {
 	const testResults = useAppStore((s) => s.testResults);
 	const tests = testResults[id ?? ""] ?? emptyTests;
 	const deletePool = useAppStore((s) => s.deletePool);
+	const sunExposure = useSunExposure(pool);
 
 	if (!pool) {
 		return (
@@ -234,16 +237,7 @@ export function PoolDetail() {
 
 			<DosingCalculator />
 
-			<Card>
-				<CardHeader>
-					<CardTitle>Forecast</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<p className="text-sm text-muted-foreground">
-						Forecast features coming soon.
-					</p>
-				</CardContent>
-			</Card>
+			<ForecastDashboard pool={pool} tests={tests} sunExposure={sunExposure} />
 
 			{/* @ts-expect-error @fx/ui Button children type */}
 			<Button asChild variant="outline">

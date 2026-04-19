@@ -34,6 +34,16 @@ vi.mock("./pool-map", () => ({
 	}) => <div data-testid="pool-map" data-lat={latitude} data-lng={longitude} />,
 }));
 
+vi.mock("../../hooks/use-sun-exposure", () => ({
+	useSunExposure: () => null,
+}));
+
+vi.mock("../forecast/forecast-dashboard", () => ({
+	ForecastDashboard: () => (
+		<div data-testid="forecast-dashboard">Forecast Dashboard</div>
+	),
+}));
+
 const testPool: Pool = {
 	id: "pool-1",
 	name: "Main Pool",
@@ -101,7 +111,7 @@ describe("PoolDetail", () => {
 		});
 		render(<PoolDetail />);
 		expect(screen.getByText("Water Chemistry")).toBeInTheDocument();
-		expect(screen.getByText("Forecast")).toBeInTheDocument();
+		expect(screen.getByTestId("forecast-dashboard")).toBeInTheDocument();
 	});
 
 	it("shows log first test link when no tests", () => {
