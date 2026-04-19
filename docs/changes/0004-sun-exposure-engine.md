@@ -5,7 +5,7 @@
 Implement the sun exposure calculation engine: SunCalc integration for sunrise/sunset/daylight, Open-Meteo API client for solar radiation and weather data, and the effective sun hours pipeline (PSH × tree factor). This provides the environmental input to the chlorine decay model.
 
 **Spec:** [Sun Exposure](../specs/sun-exposure/)
-**Status:** draft
+**Status:** complete
 **Depends On:** 0002
 
 ## Motivation
@@ -91,18 +91,18 @@ The engine MUST degrade gracefully when offline.
 
 ## Tasks
 
-- [ ] Install `suncalc` and `@types/suncalc` (if available, otherwise write minimal types)
-- [ ] Create `lib/solar/suncalc.ts` — getSunTimes(date, lat, lng) returning typed sunrise/sunset/daylight
-- [ ] Create `lib/solar/open-meteo.ts` — buildOpenMeteoUrl(), fetchSolarData(), parseResponse()
-- [ ] Add API response cache to Zustand store (non-persisted, keyed by rounded lat/lng, 1-hour TTL)
-- [ ] Create `lib/solar/exposure.ts` — calculatePSH(), calculateTreeFactor(), calculateEffectiveSunHours()
-- [ ] Create `lib/solar/fallback.ts` — latitude-based seasonal PSH estimate for offline mode
-- [ ] Create `lib/solar/index.ts` — computeSunExposure(pool) orchestrator returning SunExposureResult
-- [ ] Define `SunExposureResult`, `DailySunExposure`, `HourlySunData` types in `src/types/`
-- [ ] Write unit tests for all pure functions (PSH, tree factor, effective sun hours)
-- [ ] Write unit tests for Open-Meteo response parsing (mock fetch)
-- [ ] Write unit tests for fallback estimation
-- [ ] Write integration test: full pipeline with mocked API returns correct SunExposureResult
+- [x] Install `suncalc` and `@types/suncalc` (if available, otherwise write minimal types) (PR #4)
+- [x] Create `lib/solar/suncalc.ts` — getSunTimes(date, lat, lng) returning typed sunrise/sunset/daylight (PR #4)
+- [x] Create `lib/solar/open-meteo.ts` — buildOpenMeteoUrl(), fetchSolarData(), parseResponse() (PR #4)
+- [x] Add API response cache to Zustand store (non-persisted, keyed by rounded lat/lng, 1-hour TTL) (PR #4)
+- [x] Create `lib/solar/exposure.ts` — calculatePSH(), calculateTreeFactor(), calculateEffectiveSunHours() (PR #4)
+- [x] Create `lib/solar/fallback.ts` — latitude-based seasonal PSH estimate for offline mode (PR #4)
+- [x] Create `lib/solar/index.ts` — computeSunExposure(pool) orchestrator returning SunExposureResult (PR #4)
+- [x] Define `SunExposureResult`, `DailySunExposure`, `HourlySunData` types in `src/types/` (PR #4)
+- [x] Write unit tests for all pure functions (PSH, tree factor, effective sun hours) (PR #4)
+- [x] Write unit tests for Open-Meteo response parsing (mock fetch) (PR #4)
+- [x] Write unit tests for fallback estimation (PR #4)
+- [x] Write integration test: full pipeline with mocked API returns correct SunExposureResult (PR #4)
 
 ## Open Questions
 

@@ -5,7 +5,7 @@
 Implement the 7-day chlorine forecast pipeline: hourly decay simulation combining the chemistry model with sun exposure data, automatic dose scheduling, and the NextAction recommendation engine. This is the core intelligence of cl.
 
 **Spec:** [Chemistry Forecast](../specs/chemistry-forecast/)
-**Status:** draft
+**Status:** review
 **Depends On:** 0004, 0005
 
 ## Motivation
@@ -117,17 +117,17 @@ For trichlor/dichlor pools, the forecast MUST project CYA increase from dosing.
 
 ## Tasks
 
-- [ ] Define `ForecastResult`, `ForecastHour`, `DoseEvent`, `NextAction`, `ForecastWarning` types in `src/types/`
-- [ ] Implement `lib/chemistry/forecast.ts` — simulateHourly() loop with hourly k_uv and k_demand
-- [ ] Implement `lib/chemistry/scheduler.ts` — findDoseEvents() with 1-ppm buffer, evening dose snapping
-- [ ] Implement `lib/chemistry/next-action.ts` — determineNextAction() logic (dose/test/ok based on forecast + test freshness)
-- [ ] Implement `lib/chemistry/warnings.ts` — generateWarnings() for CYA creep, stale tests, pH, LSI
-- [ ] Create `useForecast(poolId)` hook — orchestrates the full pipeline with memoization
-- [ ] Write unit tests for simulation (known inputs → expected FC curve)
-- [ ] Write unit tests for dose scheduling (correct timing and amounts)
-- [ ] Write unit tests for NextAction determination (all 3 types and priorities)
-- [ ] Write unit tests for warning generation (CYA creep, stale test thresholds)
-- [ ] Write integration test: full pipeline from pool + tests + sun data → complete ForecastResult
+- [x] Define `ForecastResult`, `ForecastHour`, `DoseEvent`, `NextAction`, `ForecastWarning` types in `src/types/`
+- [x] Implement `lib/chemistry/forecast.ts` — simulateHourly() loop with hourly k_uv and k_demand
+- [x] Implement `lib/chemistry/scheduler.ts` — findDoseEvents() with 1-ppm buffer, evening dose snapping
+- [x] Implement `lib/chemistry/next-action.ts` — determineNextAction() logic (dose/test/ok based on forecast + test freshness)
+- [x] Implement `lib/chemistry/warnings.ts` — generateWarnings() for CYA creep, stale tests, pH, LSI
+- [x] Create `useForecast(poolId)` hook — orchestrates the full pipeline with memoization
+- [x] Write unit tests for simulation (known inputs → expected FC curve)
+- [x] Write unit tests for dose scheduling (correct timing and amounts)
+- [x] Write unit tests for NextAction determination (all 3 types and priorities)
+- [x] Write unit tests for warning generation (CYA creep, stale test thresholds)
+- [x] Write integration test: full pipeline from pool + tests + sun data → complete ForecastResult
 
 ## Open Questions
 

@@ -1,7 +1,7 @@
 import { act } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Pool, WaterTest } from "../types";
-import { type AppState, useAppStore } from "./app-store";
+import { type AppState, getTestsForPool, useAppStore } from "./app-store";
 
 const testPool: Pool = {
 	id: "pool-1",
@@ -23,12 +23,13 @@ const testPool: Pool = {
 const testResult: WaterTest = {
 	id: "test-1",
 	poolId: "pool-1",
-	timestamp: "2026-01-02T00:00:00Z",
-	freeChlorine: 3.0,
-	totalChlorine: 3.5,
+	testedAt: "2026-01-02T00:00:00Z",
+	createdAt: "2026-01-02T00:00:00Z",
+	fc: 3.0,
+	cc: 0.5,
 	ph: 7.4,
-	alkalinity: 100,
-	cyanuricAcid: 40,
+	ta: 100,
+	cya: 40,
 };
 
 describe("useAppStore", () => {
@@ -104,6 +105,36 @@ describe("useAppStore", () => {
 			testResult,
 			secondResult,
 		]);
+	});
+
+	it("deletes a test result", () => {
+		const secondResult: WaterTest = { ...testResult, id: "test-2" };
+		act(() => {
+			useAppStore.getState().addTestResult("pool-1", testResult);
+			useAppStore.getState().addTestResult("pool-1", secondResult);
+			useAppStore.getState().deleteTestResult("pool-1", "test-1");
+		});
+		expect(useAppStore.getState().testResults["pool-1"]).toEqual([
+			secondResult,
+		]);
+	});
+
+	it("handles deleteTestResult for non-existent pool", () => {
+		act(() => {
+			useAppStore.getState().deleteTestResult("no-pool", "test-1");
+		});
+		expect(useAppStore.getState().testResults["no-pool"]).toEqual([]);
+	});
+
+	it("gets tests for pool", () => {
+		act(() => {
+			useAppStore.getState().addTestResult("pool-1", testResult);
+		});
+		expect(getTestsForPool("pool-1")).toEqual([testResult]);
+	});
+
+	it("returns empty array for pool with no tests", () => {
+		expect(getTestsForPool("no-pool")).toEqual([]);
 	});
 
 	it("updates preferences", () => {
@@ -225,14 +256,43 @@ describe("useAppStore", () => {
 			expect(result.pools).toEqual([]);
 		});
 
-		it("returns state as-is for version 2", () => {
+		it("migrates v2 test results to v3 schema", () => {
 			const v2State = {
+				pools: [testPool],
+				testResults: {
+					"pool-1": [
+						{
+							id: "t1",
+							poolId: "pool-1",
+							timestamp: "2026-01-01T00:00:00Z",
+							freeChlorine: 5,
+							totalChlorine: 5.5,
+							ph: 7.4,
+							cyanuricAcid: 40,
+							totalAlkalinity: 100,
+						},
+					],
+				},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v2State, 2) as AppState;
+			const tests = result.testResults["pool-1"];
+			expect(tests).toHaveLength(1);
+			expect(tests[0].fc).toBe(5);
+			expect(tests[0].cc).toBeCloseTo(0.5);
+			expect(tests[0].testedAt).toBe("2026-01-01T00:00:00Z");
+			expect(tests[0].cya).toBe(40);
+			expect(tests[0].ta).toBe(100);
+		});
+
+		it("returns state as-is for version 3", () => {
+			const v3State = {
 				pools: [testPool],
 				testResults: {},
 				preferences: { units: "imperial" },
 			};
-			const result = migrate(v2State, 2);
-			expect(result).toBe(v2State);
+			const result = migrate(v3State, 3);
+			expect(result).toBe(v3State);
 		});
 	});
 });
