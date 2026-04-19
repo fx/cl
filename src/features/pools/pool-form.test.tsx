@@ -330,7 +330,8 @@ describe("PoolForm", () => {
 	});
 
 	it("shows geolocation error message", () => {
-		mockGeoError = "Location access denied. Place your pool on the map or enter coordinates manually.";
+		mockGeoError =
+			"Location access denied. Place your pool on the map or enter coordinates manually.";
 		render(<PoolForm />);
 		expect(screen.getByText(/Location access denied/)).toBeInTheDocument();
 	});

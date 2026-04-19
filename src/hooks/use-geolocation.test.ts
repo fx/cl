@@ -104,7 +104,9 @@ describe("useGeolocation", () => {
 	});
 
 	it("sets loading to true while geolocation is pending", () => {
-		let resolvePosition: (pos: { coords: { latitude: number; longitude: number } }) => void;
+		let resolvePosition: (pos: {
+			coords: { latitude: number; longitude: number };
+		}) => void;
 		mockGetCurrentPosition.mockImplementation((success) => {
 			resolvePosition = success;
 		});

@@ -1,6 +1,12 @@
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo } from "react";
-import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import {
+	MapContainer,
+	Marker,
+	TileLayer,
+	useMap,
+	useMapEvents,
+} from "react-leaflet";
 import {
 	ATTRIBUTION,
 	DEFAULT_CENTER,
@@ -16,7 +22,9 @@ interface LocationPickerProps {
 
 function MapClickHandler({
 	onLocationChange,
-}: { onLocationChange: (lat: number, lng: number) => void }) {
+}: {
+	onLocationChange: (lat: number, lng: number) => void;
+}) {
 	useMapEvents({
 		click(e) {
 			onLocationChange(e.latlng.lat, e.latlng.lng);
@@ -28,7 +36,10 @@ function MapClickHandler({
 function MapUpdater({
 	latitude,
 	longitude,
-}: { latitude: number | null; longitude: number | null }) {
+}: {
+	latitude: number | null;
+	longitude: number | null;
+}) {
 	const map = useMap();
 	useEffect(() => {
 		if (latitude != null && longitude != null) {
@@ -47,16 +58,16 @@ function DraggableMarker({
 }) {
 	const eventHandlers = useMemo(
 		() => ({
-			dragend(e: { target: { getLatLng: () => { lat: number; lng: number } } }) {
+			dragend(e: {
+				target: { getLatLng: () => { lat: number; lng: number } };
+			}) {
 				const latlng = e.target.getLatLng();
 				onLocationChange(latlng.lat, latlng.lng);
 			},
 		}),
 		[onLocationChange],
 	);
-	return (
-		<Marker position={position} draggable eventHandlers={eventHandlers} />
-	);
+	return <Marker position={position} draggable eventHandlers={eventHandlers} />;
 }
 
 export function LocationPicker({

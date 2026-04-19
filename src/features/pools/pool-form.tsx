@@ -213,9 +213,7 @@ export function PoolForm({ pool }: PoolFormProps) {
 						{geoLoading ? "Getting location..." : "Use my location"}
 					</Button>
 				</div>
-				{geoError && (
-					<p className="text-sm text-destructive">{geoError}</p>
-				)}
+				{geoError && <p className="text-sm text-destructive">{geoError}</p>}
 				<LocationPicker
 					latitude={latitude ? Number(latitude) : null}
 					longitude={longitude ? Number(longitude) : null}

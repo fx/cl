@@ -11,7 +11,9 @@ vi.mock("./leaflet-setup", () => ({
 	DEFAULT_ZOOM: 4,
 }));
 
-let capturedClickHandler: ((e: { latlng: { lat: number; lng: number } }) => void) | null = null;
+let capturedClickHandler:
+	| ((e: { latlng: { lat: number; lng: number } }) => void)
+	| null = null;
 
 vi.mock("react-leaflet", () => ({
 	MapContainer: ({
@@ -49,7 +51,8 @@ vi.mock("react-leaflet", () => ({
 			}) => void;
 		};
 	}) => (
-		<div
+		<button
+			type="button"
 			data-testid="marker"
 			data-position={JSON.stringify(position)}
 			data-draggable={String(!!draggable)}
@@ -101,9 +104,7 @@ describe("LocationPicker", () => {
 		expect(map.dataset.center).toBe(JSON.stringify([33.4484, -112.074]));
 		expect(map.dataset.zoom).toBe("13");
 		const marker = screen.getByTestId("marker");
-		expect(marker.dataset.position).toBe(
-			JSON.stringify([33.4484, -112.074]),
-		);
+		expect(marker.dataset.position).toBe(JSON.stringify([33.4484, -112.074]));
 		expect(marker.dataset.draggable).toBe("true");
 	});
 

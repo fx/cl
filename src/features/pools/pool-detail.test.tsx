@@ -28,13 +28,10 @@ vi.mock("./pool-map", () => ({
 	PoolMap: ({
 		latitude,
 		longitude,
-	}: { latitude: number; longitude: number }) => (
-		<div
-			data-testid="pool-map"
-			data-lat={latitude}
-			data-lng={longitude}
-		/>
-	),
+	}: {
+		latitude: number;
+		longitude: number;
+	}) => <div data-testid="pool-map" data-lat={latitude} data-lng={longitude} />,
 }));
 
 const testPool: Pool = {

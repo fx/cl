@@ -41,7 +41,10 @@ vi.mock("react-leaflet", () => ({
 	Marker: ({
 		position,
 		draggable,
-	}: { position: [number, number]; draggable?: boolean }) => (
+	}: {
+		position: [number, number];
+		draggable?: boolean;
+	}) => (
 		<div
 			data-testid="marker"
 			data-position={JSON.stringify(position)}
@@ -61,9 +64,7 @@ describe("PoolMap", () => {
 	it("renders non-draggable marker at pool coordinates", () => {
 		render(<PoolMap latitude={33.4484} longitude={-112.074} />);
 		const marker = screen.getByTestId("marker");
-		expect(marker.dataset.position).toBe(
-			JSON.stringify([33.4484, -112.074]),
-		);
+		expect(marker.dataset.position).toBe(JSON.stringify([33.4484, -112.074]));
 		expect(marker.dataset.draggable).toBe("false");
 	});
 
