@@ -1,4 +1,6 @@
 import {
+	Alert,
+	AlertDescription,
 	AlertDialog,
 	AlertDialogAction,
 	AlertDialogCancel,
@@ -72,24 +74,26 @@ function ChemistryCard({ chemStatus }: { chemStatus: ChemistryStatus }) {
 				{chemStatus.recommendations.length > 0 && (
 					<div className="space-y-1">
 						{chemStatus.recommendations.map((rec) => (
-							<div
+							<Alert
 								key={`${rec.type}-${rec.priority}-${rec.title}`}
-								className={`text-sm rounded p-2 ${
+								variant={
 									rec.priority === "urgent"
-										? "bg-red-50 text-red-800 dark:bg-red-950 dark:text-red-200"
+										? "destructive"
 										: rec.priority === "warning"
-											? "bg-yellow-50 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-200"
-											: "bg-muted text-muted-foreground"
-								}`}
+											? "warning"
+											: "default"
+								}
 							>
-								<span className="font-medium">{rec.title}</span>
-								<span className="ml-1">{rec.description}</span>
-								{rec.productAmount && (
-									<span className="ml-1 font-medium">
-										Add: {rec.productAmount}
-									</span>
-								)}
-							</div>
+								<AlertDescription>
+									<span className="font-medium">{rec.title}</span>
+									<span className="ml-1">{rec.description}</span>
+									{rec.productAmount && (
+										<span className="ml-1 font-medium">
+											Add: {rec.productAmount}
+										</span>
+									)}
+								</AlertDescription>
+							</Alert>
 						))}
 					</div>
 				)}

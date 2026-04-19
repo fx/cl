@@ -56,7 +56,7 @@ function TestRow({
 	latestCya: number | null;
 }) {
 	return (
-		<div className="flex flex-wrap items-center gap-2 border-b py-2 last:border-b-0">
+		<div className="flex flex-wrap items-center gap-2 py-2">
 			<span className="text-xs text-muted-foreground w-full sm:w-auto">
 				{formatDate(test.testedAt)}
 			</span>

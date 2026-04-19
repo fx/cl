@@ -123,21 +123,23 @@ export function DosingCalculator() {
 				</div>
 
 				{result && (
-					<div className="rounded border bg-muted p-3 text-sm">
-						<p className="font-medium">Add {result.formatted}</p>
-						<p className="text-muted-foreground">
-							Pool: {pool.volumeGallons.toLocaleString()} gal | +
-							{(parsedTarget - parsedCurrent).toFixed(1)} ppm
-						</p>
-						{result.cyaIncrease > 0 && (
-							<p className="mt-1 text-yellow-600 dark:text-yellow-400">
-								This will add ~{result.cyaIncrease} ppm CYA
-								{latestCya != null &&
-									` (projected: ${latestCya + result.cyaIncrease} ppm)`}
-								. Consider switching to liquid chlorine to avoid CYA buildup.
+					<Card>
+						<CardContent className="pt-4 text-sm">
+							<p className="font-medium">Add {result.formatted}</p>
+							<p className="text-muted-foreground">
+								Pool: {pool.volumeGallons.toLocaleString()} gal | +
+								{(parsedTarget - parsedCurrent).toFixed(1)} ppm
 							</p>
-						)}
-					</div>
+							{result.cyaIncrease > 0 && (
+								<p className="mt-1 text-yellow-600 dark:text-yellow-400">
+									This will add ~{result.cyaIncrease} ppm CYA
+									{latestCya != null &&
+										` (projected: ${latestCya + result.cyaIncrease} ppm)`}
+									. Consider switching to liquid chlorine to avoid CYA buildup.
+								</p>
+							)}
+						</CardContent>
+					</Card>
 				)}
 
 				{source === "swg" && (

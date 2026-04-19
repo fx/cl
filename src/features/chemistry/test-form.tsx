@@ -1,4 +1,6 @@
 import {
+	Alert,
+	AlertDescription,
 	Button,
 	Card,
 	CardContent,
@@ -128,11 +130,13 @@ export function TestForm() {
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				{errors.length > 0 && (
-					<div className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-						{errors.map((err) => (
-							<p key={err}>{err}</p>
-						))}
-					</div>
+					<Alert variant="destructive">
+						<AlertDescription>
+							{errors.map((err) => (
+								<p key={err}>{err}</p>
+							))}
+						</AlertDescription>
+					</Alert>
 				)}
 
 				<Card>

@@ -59,9 +59,8 @@ describe("PoolForm", () => {
 
 	it("renders the add pool form", () => {
 		render(<PoolForm />);
-		expect(
-			screen.getByRole("heading", { name: "Add Pool" }),
-		).toBeInTheDocument();
+		const title = document.querySelector('[data-slot="card-title"]');
+		expect(title).toHaveTextContent("Add Pool");
 		expect(screen.getByLabelText("Name *")).toBeInTheDocument();
 		expect(screen.getByLabelText("Volume (gallons) *")).toBeInTheDocument();
 		expect(screen.getByLabelText("Latitude *")).toBeInTheDocument();
