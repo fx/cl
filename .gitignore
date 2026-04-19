@@ -1,0 +1,8 @@
+node_modules
+dist
+*.local
+coverage
+
+# Editor
+.vscode
+*.sw?
