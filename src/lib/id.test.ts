@@ -20,14 +20,13 @@ describe("generateId", () => {
 	});
 
 	it("falls back when crypto.randomUUID is undefined", () => {
-		const original = crypto.randomUUID;
-		try {
-			delete (crypto as Record<string, unknown>).randomUUID;
+		const originalCrypto = globalThis.crypto;
+		const cryptoWithoutUUID = {
+			getRandomValues: originalCrypto.getRandomValues.bind(originalCrypto),
+		};
+		vi.stubGlobal("crypto", cryptoWithoutUUID);
 
-			const id = generateId();
-			expect(id).toMatch(UUID_V4_RE);
-		} finally {
-			crypto.randomUUID = original;
-		}
+		const id = generateId();
+		expect(id).toMatch(UUID_V4_RE);
 	});
 });

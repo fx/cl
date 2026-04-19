@@ -20,6 +20,7 @@ export function useGeolocation(): UseGeolocationReturn {
 	const getLocation = useCallback(() => {
 		if (!window.isSecureContext) {
 			setError("Geolocation requires a secure context (HTTPS).");
+			setLoading(false);
 			return;
 		}
 
