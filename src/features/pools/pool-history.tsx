@@ -1,3 +1,5 @@
+import { TestHistory } from "../chemistry/test-history";
+
 export function PoolHistory() {
-	return <div>Test History</div>;
+	return <TestHistory />;
 }
