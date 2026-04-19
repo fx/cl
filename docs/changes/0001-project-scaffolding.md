@@ -5,7 +5,7 @@
 Bootstrap the cl project with the full tech stack: Bun, Vite 7, React 19, @fx/ui, Tailwind CSS v4, Biome, Vitest, and PWA support. Create the directory structure, configure all tooling, and produce a minimal running app with a placeholder route.
 
 **Spec:** [Architecture](../specs/architecture/)
-**Status:** draft
+**Status:** complete
 **Depends On:** —
 
 ## Motivation
@@ -117,18 +117,18 @@ A router MUST be configured with placeholder routes.
 
 ## Tasks
 
-- [ ] Initialize Vite project with React 19 + TypeScript template
-- [ ] Install and configure @fx/ui with Tailwind CSS v4
-- [ ] Configure Biome for linting and formatting
-- [ ] Configure Vitest with jsdom and testing-library
-- [ ] Set up vite-plugin-pwa with basic manifest and icons
-- [ ] Create `src/` directory structure per architecture spec
-- [ ] Set up Zustand store with persist middleware (pools, testResults, preferences)
-- [ ] Configure wouter with placeholder routes (/, /pools/new, /pools/:id, /pools/:id/test, /pools/:id/history)
-- [ ] Create a root layout with minimal app shell (header with app name)
-- [ ] Add package.json scripts (dev, build, preview, test, lint, format)
-- [ ] Write a smoke test (app renders without crashing)
-- [ ] Verify production build works (`bun run build && bun run preview`)
+- [x] Initialize Vite project with React 19 + TypeScript template (PR #2)
+- [x] Install and configure @fx/ui with Tailwind CSS v4 (PR #2)
+- [x] Configure Biome for linting and formatting (PR #2)
+- [x] Configure Vitest with jsdom and testing-library (PR #2)
+- [x] Set up vite-plugin-pwa with basic manifest and icons (PR #2)
+- [x] Create `src/` directory structure per architecture spec (PR #2)
+- [x] Set up Zustand store with persist middleware (pools, testResults, preferences) (PR #2)
+- [x] Configure wouter with placeholder routes (/, /pools/new, /pools/:id, /pools/:id/test, /pools/:id/history) (PR #2)
+- [x] Create a root layout with minimal app shell (header with app name) (PR #2)
+- [x] Add package.json scripts (dev, build, preview, test, lint, format) (PR #2)
+- [x] Write a smoke test (app renders without crashing) (PR #2)
+- [x] Verify production build works (`bun run build && bun run preview`) (PR #2)
 
 ## Open Questions
 
