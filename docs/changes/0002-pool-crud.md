@@ -5,7 +5,7 @@
 Implement pool creation, editing, deletion, and list view with localStorage persistence. This is the foundational data entity — all other features depend on pools existing.
 
 **Spec:** [Pool Management](../specs/pool-management/)
-**Status:** draft
+**Status:** complete
 **Depends On:** 0001
 
 ## Motivation
@@ -80,17 +80,17 @@ Deleting a pool MUST remove it and all associated data.
 
 ## Tasks
 
-- [ ] Define `Pool` TypeScript type in `src/types/`
-- [ ] Add pool CRUD actions to Zustand store (addPool, updatePool, deletePool)
-- [ ] Build `PoolForm` component (name, volume, surface type, chlorine source, lat/lng inputs, tree cover slider, notes)
-- [ ] Build `PoolList` component with `PoolCard` subcomponent
-- [ ] Build `PoolDetail` container (shows pool info, placeholder for forecast/chemistry)
-- [ ] Build `TreeCoverSlider` component with labeled presets (0%, 25%, 50%, 75%, 90%)
-- [ ] Wire routes: `/` → PoolList, `/pools/new` → PoolForm, `/pools/:id` → PoolDetail
-- [ ] Add delete confirmation using @fx/ui AlertDialog
-- [ ] Build empty state for pool list ("Add your first pool")
-- [ ] Write tests for Zustand store actions (add, update, delete, persistence)
-- [ ] Write component tests for PoolForm validation (required fields, volume range)
+- [x] Define `Pool` TypeScript type in `src/types/`
+- [x] Add pool CRUD actions to Zustand store (addPool, updatePool, deletePool)
+- [x] Build `PoolForm` component (name, volume, surface type, chlorine source, lat/lng inputs, tree cover slider, notes)
+- [x] Build `PoolList` component with `PoolCard` subcomponent
+- [x] Build `PoolDetail` container (shows pool info, placeholder for forecast/chemistry)
+- [x] Build `TreeCoverSlider` component with labeled presets (0%, 25%, 50%, 75%, 90%)
+- [x] Wire routes: `/` → PoolList, `/pools/new` → PoolForm, `/pools/:id` → PoolDetail
+- [x] Add delete confirmation using @fx/ui AlertDialog
+- [x] Build empty state for pool list ("Add your first pool")
+- [x] Write tests for Zustand store actions (add, update, delete, persistence)
+- [x] Write component tests for PoolForm validation (required fields, volume range)
 
 ## Open Questions
 
