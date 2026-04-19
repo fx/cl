@@ -68,7 +68,7 @@ src/
 - **Components:** Named exports (no default exports)
 - **State:** Zustand stores in `src/stores/`, feature hooks in `src/hooks/`
 - **Types:** Centralized in `src/types/index.ts`, re-exported via barrel
-- **IDs:** Use `generateId()` from `src/lib/id.ts` (never raw `crypto.randomUUID`)
+- **IDs:** Use `generateId()` from `src/lib/id.ts` (never raw `crypto.randomUUID`). If older specs or requirements still mention `crypto.randomUUID()`, treat that as legacy wording and use `generateId()` instead.
 - **Geolocation:** Always guard with `window.isSecureContext` before using browser geolocation
 
 ## Testing
