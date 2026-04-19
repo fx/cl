@@ -1,3 +1,12 @@
+export type {
+	HourlySunData,
+	DailySunExposure,
+	SunExposureResult,
+	OpenMeteoHourlyResponse,
+	OpenMeteoResponse,
+	SolarCacheEntry,
+} from "./sun-exposure";
+
 export type PoolId = string;
 
 export type SurfaceType =

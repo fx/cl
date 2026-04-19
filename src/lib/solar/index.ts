@@ -1,0 +1,112 @@
+import type { Pool, SunExposureResult } from "../../types";
+import { useSolarCacheStore } from "../../stores/solar-cache-store";
+import { calculateEffectiveSunHours, calculateTreeFactor } from "./exposure";
+import { buildFallbackDay } from "./fallback";
+import { fetchSolarData, parseResponse } from "./open-meteo";
+
+function applyTreeFactor(
+	result: SunExposureResult,
+	pool: Pool,
+): SunExposureResult {
+	if (pool.isIndoor) {
+		return {
+			...result,
+			daily: result.daily.map((day) => ({
+				...day,
+				peakSunHours: 0,
+				effectiveSunHours: 0,
+			})),
+		};
+	}
+
+	const treeFactor = calculateTreeFactor(pool.treeCoverPercent);
+
+	return {
+		...result,
+		daily: result.daily.map((day) => ({
+			...day,
+			effectiveSunHours: calculateEffectiveSunHours(
+				day.peakSunHours,
+				treeFactor,
+			),
+		})),
+	};
+}
+
+export async function computeSunExposure(
+	pool: Pool,
+): Promise<SunExposureResult> {
+	const { latitude, longitude } = pool;
+	const store = useSolarCacheStore.getState();
+	const now = new Date().toISOString();
+
+	// Check cache
+	const cached = store.getCachedData(latitude, longitude);
+	if (cached) {
+		const daily = parseResponse(cached);
+		return applyTreeFactor(
+			{
+				poolId: pool.id,
+				fetchedAt: now,
+				dataSource: "cached",
+				daily,
+			},
+			pool,
+		);
+	}
+
+	// Try API
+	try {
+		const response = await fetchSolarData(latitude, longitude);
+		store.setCachedData(latitude, longitude, response);
+		const daily = parseResponse(response);
+
+		return applyTreeFactor(
+			{
+				poolId: pool.id,
+				fetchedAt: now,
+				dataSource: "api",
+				daily,
+			},
+			pool,
+		);
+	} catch {
+		// Fallback
+		const today = new Date();
+		const daily = Array.from({ length: 7 }, (_, i) => {
+			const date = new Date(today);
+			date.setDate(today.getDate() + i);
+			return buildFallbackDay(date, latitude, longitude);
+		});
+
+		const treeFactor = pool.isIndoor
+			? 0
+			: calculateTreeFactor(pool.treeCoverPercent);
+
+		return {
+			poolId: pool.id,
+			fetchedAt: now,
+			dataSource: "fallback",
+			daily: daily.map((day) => ({
+				...day,
+				effectiveSunHours: pool.isIndoor
+					? 0
+					: calculateEffectiveSunHours(day.peakSunHours, treeFactor),
+			})),
+		};
+	}
+}
+
+export { getSunTimes, getSunAltitude, getMaxSunAltitude } from "./suncalc";
+export {
+	buildOpenMeteoUrl,
+	fetchSolarData,
+	parseResponse,
+	parseHourlyData,
+} from "./open-meteo";
+export {
+	calculatePSH,
+	calculateTreeFactor,
+	calculateEffectiveSunHours,
+} from "./exposure";
+export { estimatePSH, calculateCMF, buildFallbackDay } from "./fallback";
