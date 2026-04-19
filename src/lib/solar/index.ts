@@ -41,13 +41,13 @@ export async function computeSunExposure(
 	const now = new Date().toISOString();
 
 	// Check cache
-	const cached = store.getCachedData(latitude, longitude);
-	if (cached) {
-		const daily = parseResponse(cached);
+	const cacheEntry = store.getCacheEntry(latitude, longitude);
+	if (cacheEntry) {
+		const daily = parseResponse(cacheEntry.data);
 		return applyTreeFactor(
 			{
 				poolId: pool.id,
-				fetchedAt: now,
+				fetchedAt: new Date(cacheEntry.fetchedAt).toISOString(),
 				dataSource: "cached",
 				daily,
 			},

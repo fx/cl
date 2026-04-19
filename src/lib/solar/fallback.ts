@@ -25,7 +25,10 @@ export function buildFallbackDay(
 ): DailySunExposure {
 	const sunTimes = getSunTimes(date, lat, lng);
 	const psh = estimatePSH(sunTimes, lat, lng);
-	const dateStr = date.toISOString().slice(0, 10);
+	const y = date.getFullYear();
+	const m = String(date.getMonth() + 1).padStart(2, "0");
+	const d = String(date.getDate()).padStart(2, "0");
+	const dateStr = `${y}-${m}-${d}`;
 
 	return {
 		date: dateStr,

@@ -35,6 +35,10 @@ describe("buildCacheKey", () => {
 	it("handles negative values", () => {
 		expect(buildCacheKey(-33.8688, 151.2093)).toBe("-33.87,151.21");
 	});
+
+	it("normalizes -0 to 0", () => {
+		expect(buildCacheKey(-0.001, 0.001)).toBe("0.00,0.00");
+	});
 });
 
 describe("isCacheValid", () => {
@@ -82,16 +86,27 @@ describe("useSolarCacheStore", () => {
 	});
 
 	it("returns null for expired cache entries", () => {
-		// Set cache with old timestamp
 		vi.spyOn(Date, "now").mockReturnValue(1000);
 		act(() => {
 			useSolarCacheStore.getState().setCachedData(33.45, -112.07, mockResponse);
 		});
 
-		// Check cache 2 hours later
 		vi.spyOn(Date, "now").mockReturnValue(1000 + 2 * 60 * 60 * 1000);
 		const result = useSolarCacheStore.getState().getCachedData(33.45, -112.07);
 		expect(result).toBeNull();
+	});
+
+	it("removes expired entries from cache on access", () => {
+		vi.spyOn(Date, "now").mockReturnValue(1000);
+		act(() => {
+			useSolarCacheStore.getState().setCachedData(33.45, -112.07, mockResponse);
+		});
+
+		vi.spyOn(Date, "now").mockReturnValue(1000 + 2 * 60 * 60 * 1000);
+		useSolarCacheStore.getState().getCachedData(33.45, -112.07);
+
+		// Entry should be removed from the cache map
+		expect(useSolarCacheStore.getState().cache).toEqual({});
 	});
 
 	it("matches coordinates rounded to 2 decimal places", () => {
@@ -99,7 +114,6 @@ describe("useSolarCacheStore", () => {
 			useSolarCacheStore.getState().setCachedData(33.4484, -112.074, mockResponse);
 		});
 
-		// Same rounded key
 		const result = useSolarCacheStore.getState().getCachedData(33.449, -112.073);
 		expect(result).toEqual(mockResponse);
 	});
@@ -129,5 +143,37 @@ describe("useSolarCacheStore", () => {
 
 		expect(useSolarCacheStore.getState().getCachedData(33.45, -112.07)?.latitude).toBe(33.45);
 		expect(useSolarCacheStore.getState().getCachedData(47.6, -122.33)?.latitude).toBe(47.6);
+	});
+
+	describe("getCacheEntry", () => {
+		it("returns null for uncached coordinates", () => {
+			const result = useSolarCacheStore.getState().getCacheEntry(33.45, -112.07);
+			expect(result).toBeNull();
+		});
+
+		it("returns full entry with fetchedAt timestamp", () => {
+			const timestamp = 1719000000000;
+			vi.spyOn(Date, "now").mockReturnValue(timestamp);
+			act(() => {
+				useSolarCacheStore.getState().setCachedData(33.45, -112.07, mockResponse);
+			});
+
+			const entry = useSolarCacheStore.getState().getCacheEntry(33.45, -112.07);
+			expect(entry).not.toBeNull();
+			expect(entry?.data).toEqual(mockResponse);
+			expect(entry?.fetchedAt).toBe(timestamp);
+		});
+
+		it("returns null and cleans up expired entries", () => {
+			vi.spyOn(Date, "now").mockReturnValue(1000);
+			act(() => {
+				useSolarCacheStore.getState().setCachedData(33.45, -112.07, mockResponse);
+			});
+
+			vi.spyOn(Date, "now").mockReturnValue(1000 + 2 * 60 * 60 * 1000);
+			const entry = useSolarCacheStore.getState().getCacheEntry(33.45, -112.07);
+			expect(entry).toBeNull();
+			expect(useSolarCacheStore.getState().cache).toEqual({});
+		});
 	});
 });

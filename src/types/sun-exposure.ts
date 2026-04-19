@@ -29,13 +29,13 @@ export interface SunExposureResult {
 
 export interface OpenMeteoHourlyResponse {
 	time: string[];
-	shortwave_radiation: number[];
-	direct_radiation: number[];
-	diffuse_radiation: number[];
-	cloud_cover: number[];
-	uv_index: number[];
-	uv_index_clear_sky: number[];
-	temperature_2m: number[];
+	shortwave_radiation: (number | null)[];
+	direct_radiation: (number | null)[];
+	diffuse_radiation: (number | null)[];
+	cloud_cover: (number | null)[];
+	uv_index: (number | null)[];
+	uv_index_clear_sky: (number | null)[];
+	temperature_2m: (number | null)[];
 }
 
 export interface OpenMeteoResponse {

@@ -9,6 +9,7 @@ export interface SolarCacheState {
 
 export interface SolarCacheActions {
 	getCachedData: (lat: number, lng: number) => OpenMeteoResponse | null;
+	getCacheEntry: (lat: number, lng: number) => SolarCacheEntry | null;
 	setCachedData: (
 		lat: number,
 		lng: number,
@@ -17,8 +18,13 @@ export interface SolarCacheActions {
 	clearCache: () => void;
 }
 
+function formatCoord(value: number): string {
+	const rounded = Number(value.toFixed(2));
+	return (Object.is(rounded, -0) ? 0 : rounded).toFixed(2);
+}
+
 export function buildCacheKey(lat: number, lng: number): string {
-	return `${lat.toFixed(2)},${lng.toFixed(2)}`;
+	return `${formatCoord(lat)},${formatCoord(lng)}`;
 }
 
 export function isCacheValid(entry: SolarCacheEntry, now: number): boolean {
@@ -31,11 +37,22 @@ export const useSolarCacheStore = create<
 	cache: {},
 
 	getCachedData: (lat: number, lng: number): OpenMeteoResponse | null => {
+		const entry = get().getCacheEntry(lat, lng);
+		return entry?.data ?? null;
+	},
+
+	getCacheEntry: (lat: number, lng: number): SolarCacheEntry | null => {
 		const key = buildCacheKey(lat, lng);
 		const entry = get().cache[key];
 		if (!entry) return null;
-		if (!isCacheValid(entry, Date.now())) return null;
-		return entry.data;
+		if (!isCacheValid(entry, Date.now())) {
+			set((state) => {
+				const { [key]: _, ...rest } = state.cache;
+				return { cache: rest };
+			});
+			return null;
+		}
+		return entry;
 	},
 
 	setCachedData: (
