@@ -17,6 +17,7 @@ import {
 import { Link, useLocation, useParams } from "wouter";
 import { useAppStore } from "../../stores/app-store";
 import { CHLORINE_SOURCE_LABELS, SURFACE_TYPE_LABELS } from "../../types";
+import { PoolMap } from "./pool-map";
 
 export function PoolDetail() {
 	const { id } = useParams<{ id: string }>();
@@ -111,6 +112,15 @@ export function PoolDetail() {
 							<p className="mt-1">{pool.notes}</p>
 						</div>
 					)}
+				</CardContent>
+			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Location</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<PoolMap latitude={pool.latitude} longitude={pool.longitude} />
 				</CardContent>
 			</Card>
 

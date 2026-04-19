@@ -19,6 +19,7 @@
 		"leaflet": "^1.9.4",
 		"react": "^19",
 		"react-dom": "^19",
+		"react-leaflet": "^5.0.0",
 		"recharts": "^3.8.1",
 		"suncalc": "^1.9.0",
 		"vite-plugin-pwa": "^1.2.0",

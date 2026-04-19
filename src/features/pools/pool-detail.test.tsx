@@ -24,6 +24,19 @@ vi.mock("wouter", () => ({
 	),
 }));
 
+vi.mock("./pool-map", () => ({
+	PoolMap: ({
+		latitude,
+		longitude,
+	}: { latitude: number; longitude: number }) => (
+		<div
+			data-testid="pool-map"
+			data-lat={latitude}
+			data-lng={longitude}
+		/>
+	),
+}));
+
 const testPool: Pool = {
 	id: "pool-1",
 	name: "Main Pool",
@@ -130,5 +143,15 @@ describe("PoolDetail", () => {
 		});
 		render(<PoolDetail />);
 		expect(screen.queryByText("Notes")).not.toBeInTheDocument();
+	});
+
+	it("renders location map", () => {
+		act(() => {
+			useAppStore.getState().addPool(testPool);
+		});
+		render(<PoolDetail />);
+		const map = screen.getByTestId("pool-map");
+		expect(map.dataset.lat).toBe("33.4484");
+		expect(map.dataset.lng).toBe("-112.074");
 	});
 });
