@@ -16,6 +16,7 @@ export interface AppActions {
 	) => void;
 	deletePool: (id: PoolId) => void;
 	addTestResult: (poolId: PoolId, test: WaterTest) => void;
+	deleteTestResult: (poolId: PoolId, testId: string) => void;
 	setPreferences: (prefs: Partial<UserPreferences>) => void;
 	reset: () => void;
 }
@@ -58,6 +59,15 @@ export const useAppStore = create<AppState & AppActions>()(
 						[poolId]: [...(state.testResults[poolId] ?? []), test],
 					},
 				})),
+			deleteTestResult: (poolId, testId) =>
+				set((state) => ({
+					testResults: {
+						...state.testResults,
+						[poolId]: (state.testResults[poolId] ?? []).filter(
+							(t) => t.id !== testId,
+						),
+					},
+				})),
 			setPreferences: (prefs) =>
 				set((state) => ({
 					preferences: { ...state.preferences, ...prefs },
@@ -98,3 +108,7 @@ export const useAppStore = create<AppState & AppActions>()(
 		},
 	),
 );
+
+export function getTestsForPool(poolId: PoolId): WaterTest[] {
+	return useAppStore.getState().testResults[poolId] ?? [];
+}
