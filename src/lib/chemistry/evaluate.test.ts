@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Pool, WaterTest } from "../../types";
+import { generateId } from "../id";
 import { evaluateChemistry } from "./evaluate";
 
 const testPool: Pool = {
@@ -21,7 +22,7 @@ const testPool: Pool = {
 
 function makeTest(overrides: Partial<WaterTest>): WaterTest {
 	return {
-		id: crypto.randomUUID(),
+		id: generateId(),
 		poolId: "pool-1",
 		testedAt: "2026-01-01T12:00:00Z",
 		createdAt: "2026-01-01T12:00:00Z",

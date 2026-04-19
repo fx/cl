@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { generateId } from "../lib/id";
 import type { Pool, PoolId, UserPreferences, WaterTest } from "../types";
 
 export interface AppState {
@@ -108,7 +109,7 @@ export const useAppStore = create<AppState & AppActions>()(
 						migratedTests[poolId] = (tests as Record<string, unknown>[]).map(
 							(t) =>
 								({
-									id: t.id ?? crypto.randomUUID(),
+									id: t.id ?? generateId(),
 									poolId: t.poolId ?? poolId,
 									testedAt:
 										t.testedAt ?? t.timestamp ?? new Date().toISOString(),

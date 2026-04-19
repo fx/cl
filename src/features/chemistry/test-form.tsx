@@ -10,6 +10,7 @@ import {
 } from "@fx/ui";
 import { useState } from "react";
 import { useLocation, useParams } from "wouter";
+import { generateId } from "../../lib/id";
 import { useAppStore } from "../../stores/app-store";
 import type { WaterTest } from "../../types";
 
@@ -100,7 +101,7 @@ export function TestForm() {
 
 		const now = new Date().toISOString();
 		const test: WaterTest = {
-			id: crypto.randomUUID(),
+			id: generateId(),
 			poolId: poolId,
 			testedAt: testedAt ? new Date(testedAt).toISOString() : now,
 			createdAt: now,

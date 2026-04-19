@@ -12,6 +12,7 @@ import {
 import { type FormEvent, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useGeolocation } from "../../hooks/use-geolocation";
+import { generateId } from "../../lib/id";
 import { useAppStore } from "../../stores/app-store";
 import type { ChlorineSource, Pool, SurfaceType } from "../../types";
 import { CHLORINE_SOURCE_LABELS, SURFACE_TYPE_LABELS } from "../../types";
@@ -144,7 +145,7 @@ export function PoolForm({ pool }: PoolFormProps) {
 			navigate(`/pools/${pool.id}`);
 		} else {
 			const newPool: Pool = {
-				id: crypto.randomUUID(),
+				id: generateId(),
 				name: name.trim(),
 				volumeGallons: Number(volumeGallons),
 				latitude: Number(latitude),
