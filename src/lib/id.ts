@@ -1,3 +1,5 @@
+const hasRandomUUID = typeof crypto.randomUUID === "function";
+
 /**
  * Generate a UUID v4 string.
  *
@@ -5,7 +7,7 @@
  * falls back to `crypto.getRandomValues()` for non-secure contexts.
  */
 export function generateId(): string {
-	if (typeof crypto.randomUUID === "function") {
+	if (hasRandomUUID) {
 		return crypto.randomUUID();
 	}
 
