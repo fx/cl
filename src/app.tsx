@@ -1,6 +1,7 @@
 import { Route, Switch } from "wouter";
 import { Layout } from "./components/layout";
 import { PoolDetail } from "./features/pools/pool-detail";
+import { PoolEdit } from "./features/pools/pool-edit";
 import { PoolHistory } from "./features/pools/pool-history";
 import { PoolList } from "./features/pools/pool-list";
 import { PoolNew } from "./features/pools/pool-new";
@@ -12,6 +13,7 @@ export function App() {
 			<Switch>
 				<Route path="/" component={PoolList} />
 				<Route path="/pools/new" component={PoolNew} />
+				<Route path="/pools/:id/edit" component={PoolEdit} />
 				<Route path="/pools/:id" component={PoolDetail} />
 				<Route path="/pools/:id/test" component={PoolTest} />
 				<Route path="/pools/:id/history" component={PoolHistory} />
