@@ -5,14 +5,10 @@
    are never generated because they only appear in pre-compiled JS. */
 @source "../node_modules/@fx/ui/dist";
 
-:root {
-	--radius: 0.625rem;
-}
-
 /* Re-register theme tokens that @fx/ui's @theme inline block defines but
    Tailwind v4 doesn't propagate correctly through @import. Without this
-   block, utilities like bg-primary, text-primary-foreground, rounded-lg
-   resolve to empty values. */
+   block, utilities like bg-primary, text-primary-foreground resolve to
+   empty values. */
 @theme {
 	--color-background: hsl(var(--background));
 	--color-foreground: hsl(var(--foreground));
@@ -42,20 +38,4 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
-}
-
-/* @fx/ui Card ships without a rounded class — add it here. */
-[data-slot="card"] {
-	border-radius: var(--radius-xl);
-	box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-}
-
-/* @fx/ui Input ships without a rounded class — add it here. */
-[data-slot="input"] {
-	border-radius: var(--radius-md);
-}
-
-/* Textarea same treatment */
-[data-slot="textarea"] {
-	border-radius: var(--radius-md);
 }
