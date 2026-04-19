@@ -10,7 +10,11 @@ export interface AppState {
 
 export interface AppActions {
 	addPool: (pool: Pool) => void;
-	removePool: (id: PoolId) => void;
+	updatePool: (
+		id: PoolId,
+		updates: Partial<Omit<Pool, "id" | "createdAt">>,
+	) => void;
+	deletePool: (id: PoolId) => void;
 	addTestResult: (poolId: PoolId, test: WaterTest) => void;
 	setPreferences: (prefs: Partial<UserPreferences>) => void;
 	reset: () => void;
@@ -32,7 +36,15 @@ export const useAppStore = create<AppState & AppActions>()(
 				set((state) => ({
 					pools: [...state.pools, pool],
 				})),
-			removePool: (id) =>
+			updatePool: (id, updates) =>
+				set((state) => ({
+					pools: state.pools.map((p) =>
+						p.id === id
+							? { ...p, ...updates, updatedAt: new Date().toISOString() }
+							: p,
+					),
+				})),
+			deletePool: (id) =>
 				set((state) => ({
 					pools: state.pools.filter((p) => p.id !== id),
 					testResults: Object.fromEntries(
