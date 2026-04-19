@@ -136,8 +136,7 @@ export function TestHistory() {
 		<div className="mx-auto max-w-2xl space-y-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">Test History — {pool.name}</h2>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild size="sm">
+				<Button asChild nativeButton={false} size="sm">
 					<Link href={`/pools/${pool.id}/test`}>Log Test</Link>
 				</Button>
 			</div>
@@ -163,8 +162,7 @@ export function TestHistory() {
 				</CardContent>
 			</Card>
 
-			{/* @ts-expect-error @fx/ui Button children type */}
-			<Button asChild variant="outline">
+			<Button asChild nativeButton={false} variant="outline">
 				<Link href={`/pools/${pool.id}`}>Back to pool</Link>
 			</Button>
 		</div>

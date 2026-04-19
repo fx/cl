@@ -1,0 +1,5 @@
+@import "@fx/ui/styles/globals.css";
+
+:root {
+	--radius: 0.625rem;
+}

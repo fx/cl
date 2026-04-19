@@ -23,16 +23,16 @@ export function getSunTimes(date: Date, lat: number, lng: number): SunTimes {
 	};
 }
 
-export function getSunAltitude(
-	date: Date,
-	lat: number,
-	lng: number,
-): number {
+export function getSunAltitude(date: Date, lat: number, lng: number): number {
 	const position = SunCalc.getPosition(date, lat, lng);
 	return (position.altitude * 180) / Math.PI;
 }
 
-export function getMaxSunAltitude(date: Date, lat: number, lng: number): number {
+export function getMaxSunAltitude(
+	date: Date,
+	lat: number,
+	lng: number,
+): number {
 	const times = SunCalc.getTimes(date, lat, lng);
 	return getSunAltitude(times.solarNoon, lat, lng);
 }

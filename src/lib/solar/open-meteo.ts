@@ -33,7 +33,9 @@ export async function fetchSolarData(
 	const url = buildOpenMeteoUrl(lat, lng);
 	const response = await fetch(url);
 	if (!response.ok) {
-		throw new Error(`Open-Meteo API error: ${response.status} ${response.statusText}`);
+		throw new Error(
+			`Open-Meteo API error: ${response.status} ${response.statusText}`,
+		);
 	}
 	return response.json() as Promise<OpenMeteoResponse>;
 }
@@ -74,9 +76,7 @@ function groupByDate(times: string[]): Map<string, number[]> {
 	return groups;
 }
 
-export function parseResponse(
-	response: OpenMeteoResponse,
-): DailySunExposure[] {
+export function parseResponse(response: OpenMeteoResponse): DailySunExposure[] {
 	const { hourly, latitude, longitude } = response;
 	const groups = groupByDate(hourly.time);
 	const days: DailySunExposure[] = [];

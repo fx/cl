@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getSunTimes } from "./suncalc";
 import { buildFallbackDay, calculateCMF, estimatePSH } from "./fallback";
+import { getSunTimes } from "./suncalc";
 
 describe("estimatePSH", () => {
 	it("returns a reasonable PSH for Phoenix summer", () => {

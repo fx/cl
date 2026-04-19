@@ -115,8 +115,7 @@ export function PoolDetail() {
 		return (
 			<div className="py-8 text-center">
 				<p className="text-muted-foreground">Pool not found</p>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild variant="outline" className="mt-4">
+				<Button asChild nativeButton={false} variant="outline" className="mt-4">
 					<Link href="/">Back to pools</Link>
 				</Button>
 			</div>
@@ -136,21 +135,17 @@ export function PoolDetail() {
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">{pool.name}</h2>
 				<div className="flex gap-2">
-					{/* @ts-expect-error @fx/ui Button children type */}
-					<Button asChild size="sm">
+					<Button asChild nativeButton={false} size="sm">
 						<Link href={`/pools/${pool.id}/test`}>Log Test</Link>
 					</Button>
-					{/* @ts-expect-error @fx/ui Button children type */}
-					<Button asChild variant="outline" size="sm">
+					<Button asChild nativeButton={false} variant="outline" size="sm">
 						<Link href={`/pools/${pool.id}/history`}>History</Link>
 					</Button>
-					{/* @ts-expect-error @fx/ui Button children type */}
-					<Button asChild variant="outline" size="sm">
+					<Button asChild nativeButton={false} variant="outline" size="sm">
 						<Link href={`/pools/${pool.id}/edit`}>Edit</Link>
 					</Button>
 					<AlertDialog>
-						<AlertDialogTrigger>
-							{/* @ts-expect-error @fx/ui Button children type */}
+						<AlertDialogTrigger asChild>
 							<Button variant="destructive" size="sm">
 								Delete
 							</Button>
@@ -243,8 +238,7 @@ export function PoolDetail() {
 
 			<ForecastDashboard pool={pool} tests={tests} sunExposure={sunExposure} />
 
-			{/* @ts-expect-error @fx/ui Button children type */}
-			<Button asChild variant="outline">
+			<Button asChild nativeButton={false} variant="outline">
 				<Link href="/">Back to pools</Link>
 			</Button>
 		</div>

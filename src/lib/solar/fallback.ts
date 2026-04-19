@@ -3,7 +3,11 @@ import { getSunAltitude, getSunTimes, type SunTimes } from "./suncalc";
 
 const AVERAGE_CLOUD_FACTOR = 0.75;
 
-export function estimatePSH(sunTimes: SunTimes, lat: number, lng: number): number {
+export function estimatePSH(
+	sunTimes: SunTimes,
+	lat: number,
+	lng: number,
+): number {
 	const maxAltDeg = getSunAltitude(sunTimes.solarNoon, lat, lng);
 	const maxAltRad = (maxAltDeg * Math.PI) / 180;
 	const sinAlt = Math.sin(maxAltRad);

@@ -56,8 +56,7 @@ export function NextActionCard({ nextAction, poolId }: NextActionCardProps) {
 					)}
 					{(nextAction.type === "dose" || nextAction.type === "test") && (
 						<div className="mt-3 flex gap-2">
-							{/* @ts-expect-error @fx/ui Button children type */}
-							<Button asChild size="sm">
+							<Button asChild nativeButton={false} size="sm">
 								<Link href={`/pools/${poolId}/test`}>Log Test</Link>
 							</Button>
 						</div>

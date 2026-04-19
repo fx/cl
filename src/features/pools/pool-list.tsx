@@ -14,8 +14,7 @@ export function PoolList() {
 		return (
 			<div className="flex flex-col items-center justify-center gap-4 py-16">
 				<p className="text-lg text-muted-foreground">Add your first pool</p>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild>
+				<Button asChild nativeButton={false}>
 					<Link href="/pools/new">Add Pool</Link>
 				</Button>
 			</div>
@@ -26,8 +25,7 @@ export function PoolList() {
 		<div className="space-y-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">Your Pools</h2>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild>
+				<Button asChild nativeButton={false}>
 					<Link href="/pools/new">Add Pool</Link>
 				</Button>
 			</div>
