@@ -19,7 +19,7 @@ export function PoolMap({ latitude, longitude }: PoolMapProps) {
 				scrollWheelZoom={false}
 				dragging={false}
 				className="h-full w-full"
-				zoomControl
+				zoomControl={false}
 			>
 				<TileLayer url={TILE_URL} attribution={ATTRIBUTION} />
 				<Marker position={[latitude, longitude]} />

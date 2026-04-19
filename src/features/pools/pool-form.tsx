@@ -215,8 +215,16 @@ export function PoolForm({ pool }: PoolFormProps) {
 				</div>
 				{geoError && <p className="text-sm text-destructive">{geoError}</p>}
 				<LocationPicker
-					latitude={latitude ? Number(latitude) : null}
-					longitude={longitude ? Number(longitude) : null}
+					latitude={
+						latitude && Number.isFinite(Number(latitude))
+							? Number(latitude)
+							: null
+					}
+					longitude={
+						longitude && Number.isFinite(Number(longitude))
+							? Number(longitude)
+							: null
+					}
 					onLocationChange={(lat, lng) => {
 						setLatitude(String(lat));
 						setLongitude(String(lng));

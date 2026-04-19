@@ -85,6 +85,20 @@ describe("useGeolocation", () => {
 		expect(result.current.loading).toBe(false);
 	});
 
+	it("sets error on unknown error code", () => {
+		mockGetCurrentPosition.mockImplementation((_success, error) => {
+			error({ code: 99 });
+		});
+
+		const { result } = renderHook(() => useGeolocation());
+		act(() => {
+			result.current.getLocation();
+		});
+
+		expect(result.current.error).toBe("An unknown location error occurred.");
+		expect(result.current.loading).toBe(false);
+	});
+
 	it("sets error when geolocation is not supported", () => {
 		Object.defineProperty(navigator, "geolocation", {
 			value: undefined,
@@ -104,7 +118,7 @@ describe("useGeolocation", () => {
 	});
 
 	it("sets loading to true while geolocation is pending", () => {
-		let resolvePosition: (pos: {
+		let resolvePosition!: (pos: {
 			coords: { latitude: number; longitude: number };
 		}) => void;
 		mockGetCurrentPosition.mockImplementation((success) => {

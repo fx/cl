@@ -16,6 +16,7 @@ vi.mock("react-leaflet", () => ({
 		zoom,
 		dragging,
 		scrollWheelZoom,
+		zoomControl,
 	}: {
 		children: React.ReactNode;
 		center: [number, number];
@@ -31,6 +32,7 @@ vi.mock("react-leaflet", () => ({
 			data-zoom={zoom}
 			data-dragging={String(!!dragging)}
 			data-scroll-wheel-zoom={String(!!scrollWheelZoom)}
+			data-zoom-control={String(!!zoomControl)}
 		>
 			{children}
 		</div>
@@ -68,11 +70,12 @@ describe("PoolMap", () => {
 		expect(marker.dataset.draggable).toBe("false");
 	});
 
-	it("disables scroll wheel zoom and dragging", () => {
+	it("disables scroll wheel zoom, dragging, and zoom control", () => {
 		render(<PoolMap latitude={33.4484} longitude={-112.074} />);
 		const map = screen.getByTestId("map-container");
 		expect(map.dataset.dragging).toBe("false");
 		expect(map.dataset.scrollWheelZoom).toBe("false");
+		expect(map.dataset.zoomControl).toBe("false");
 	});
 
 	it("renders tile layer", () => {

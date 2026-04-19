@@ -47,6 +47,9 @@ export function useGeolocation(): UseGeolocationReturn {
 					case err.TIMEOUT:
 						setError("Location request timed out.");
 						break;
+					default:
+						setError("An unknown location error occurred.");
+						break;
 				}
 				setLoading(false);
 			},
