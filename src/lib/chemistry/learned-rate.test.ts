@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { WaterTest } from "../../types";
+import { generateId } from "../id";
 import { extractObservedRates, learnDecayRate } from "./learned-rate";
 
 function makeTest(
 	overrides: Partial<WaterTest> & { testedAt: string },
 ): WaterTest {
 	return {
-		id: crypto.randomUUID(),
+		id: generateId(),
 		poolId: "pool-1",
 		createdAt: overrides.testedAt,
 		...overrides,

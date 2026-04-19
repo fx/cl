@@ -43,9 +43,7 @@ describe("getSunTimes", () => {
 		expect(result.solarNoon.getTime()).toBeGreaterThan(
 			result.sunrise.getTime(),
 		);
-		expect(result.solarNoon.getTime()).toBeLessThan(
-			result.sunset.getTime(),
-		);
+		expect(result.solarNoon.getTime()).toBeLessThan(result.sunset.getTime());
 	});
 });
 

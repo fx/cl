@@ -10,11 +10,7 @@ export interface SolarCacheState {
 export interface SolarCacheActions {
 	getCachedData: (lat: number, lng: number) => OpenMeteoResponse | null;
 	getCacheEntry: (lat: number, lng: number) => SolarCacheEntry | null;
-	setCachedData: (
-		lat: number,
-		lng: number,
-		data: OpenMeteoResponse,
-	) => void;
+	setCachedData: (lat: number, lng: number, data: OpenMeteoResponse) => void;
 	clearCache: () => void;
 }
 
@@ -31,45 +27,45 @@ export function isCacheValid(entry: SolarCacheEntry, now: number): boolean {
 	return now - entry.fetchedAt < CACHE_TTL_MS;
 }
 
-export const useSolarCacheStore = create<
-	SolarCacheState & SolarCacheActions
->()((set, get) => ({
-	cache: {},
+export const useSolarCacheStore = create<SolarCacheState & SolarCacheActions>()(
+	(set, get) => ({
+		cache: {},
 
-	getCachedData: (lat: number, lng: number): OpenMeteoResponse | null => {
-		const entry = get().getCacheEntry(lat, lng);
-		return entry?.data ?? null;
-	},
+		getCachedData: (lat: number, lng: number): OpenMeteoResponse | null => {
+			const entry = get().getCacheEntry(lat, lng);
+			return entry?.data ?? null;
+		},
 
-	getCacheEntry: (lat: number, lng: number): SolarCacheEntry | null => {
-		const key = buildCacheKey(lat, lng);
-		const entry = get().cache[key];
-		if (!entry) return null;
-		if (!isCacheValid(entry, Date.now())) {
-			set((state) => {
-				const { [key]: _, ...rest } = state.cache;
-				return { cache: rest };
-			});
-			return null;
-		}
-		return entry;
-	},
+		getCacheEntry: (lat: number, lng: number): SolarCacheEntry | null => {
+			const key = buildCacheKey(lat, lng);
+			const entry = get().cache[key];
+			if (!entry) return null;
+			if (!isCacheValid(entry, Date.now())) {
+				set((state) => {
+					const { [key]: _, ...rest } = state.cache;
+					return { cache: rest };
+				});
+				return null;
+			}
+			return entry;
+		},
 
-	setCachedData: (
-		lat: number,
-		lng: number,
-		data: OpenMeteoResponse,
-	): void => {
-		const key = buildCacheKey(lat, lng);
-		set((state) => ({
-			cache: {
-				...state.cache,
-				[key]: { data, fetchedAt: Date.now() },
-			},
-		}));
-	},
+		setCachedData: (
+			lat: number,
+			lng: number,
+			data: OpenMeteoResponse,
+		): void => {
+			const key = buildCacheKey(lat, lng);
+			set((state) => ({
+				cache: {
+					...state.cache,
+					[key]: { data, fetchedAt: Date.now() },
+				},
+			}));
+		},
 
-	clearCache: (): void => {
-		set({ cache: {} });
-	},
-}));
+		clearCache: (): void => {
+			set({ cache: {} });
+		},
+	}),
+);

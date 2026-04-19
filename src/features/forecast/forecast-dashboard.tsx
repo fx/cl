@@ -42,8 +42,7 @@ export function ForecastDashboard({
 					<p className="text-sm text-muted-foreground">
 						Log your first water test to see chlorine predictions.
 					</p>
-					{/* @ts-expect-error @fx/ui Button children type */}
-					<Button asChild size="sm" className="mt-2">
+					<Button asChild nativeButton={false} size="sm" className="mt-2">
 						<Link href={`/pools/${pool.id}/test`}>Log Test</Link>
 					</Button>
 				</CardContent>
@@ -136,12 +135,10 @@ export function ForecastDashboard({
 
 			{/* Quick actions */}
 			<div className="flex gap-2">
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild size="sm">
+				<Button asChild nativeButton={false} size="sm">
 					<Link href={`/pools/${pool.id}/test`}>Log Test</Link>
 				</Button>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild variant="outline" size="sm">
+				<Button asChild nativeButton={false} variant="outline" size="sm">
 					<Link href={`/pools/${pool.id}/dose`}>Calculate Dose</Link>
 				</Button>
 			</div>

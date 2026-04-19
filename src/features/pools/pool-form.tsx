@@ -1,5 +1,9 @@
 import {
 	Button,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
 	Input,
 	Label,
 	Select,
@@ -12,6 +16,7 @@ import {
 import { type FormEvent, useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useGeolocation } from "../../hooks/use-geolocation";
+import { generateId } from "../../lib/id";
 import { useAppStore } from "../../stores/app-store";
 import type { ChlorineSource, Pool, SurfaceType } from "../../types";
 import { CHLORINE_SOURCE_LABELS, SURFACE_TYPE_LABELS } from "../../types";
@@ -144,7 +149,7 @@ export function PoolForm({ pool }: PoolFormProps) {
 			navigate(`/pools/${pool.id}`);
 		} else {
 			const newPool: Pool = {
-				id: crypto.randomUUID(),
+				id: generateId(),
 				name: name.trim(),
 				volumeGallons: Number(volumeGallons),
 				latitude: Number(latitude),
@@ -166,156 +171,161 @@ export function PoolForm({ pool }: PoolFormProps) {
 
 	return (
 		<form onSubmit={handleSubmit} className="mx-auto max-w-lg space-y-4">
-			<h2 className="text-xl font-semibold">
-				{isEditing ? "Edit Pool" : "Add Pool"}
-			</h2>
-
-			<div className="space-y-1">
-				<Label htmlFor="name">Name *</Label>
-				<Input
-					id="name"
-					value={name}
-					onChange={(e) => setName((e.target as HTMLInputElement).value)}
-					placeholder="e.g. Backyard Pool"
-				/>
-				{errors.name && (
-					<p className="text-sm text-destructive">{errors.name}</p>
-				)}
-			</div>
-
-			<div className="space-y-1">
-				<Label htmlFor="volumeGallons">Volume (gallons) *</Label>
-				<Input
-					id="volumeGallons"
-					type="number"
-					value={volumeGallons}
-					onChange={(e) =>
-						setVolumeGallons((e.target as HTMLInputElement).value)
-					}
-					placeholder="e.g. 15000"
-				/>
-				{errors.volumeGallons && (
-					<p className="text-sm text-destructive">{errors.volumeGallons}</p>
-				)}
-			</div>
-
-			<div className="space-y-2">
-				<div className="flex items-center justify-between">
-					<Label>Location *</Label>
-					{/* @ts-expect-error @fx/ui Button children type */}
-					<Button
-						type="button"
-						variant="outline"
-						size="sm"
-						onClick={getLocation}
-						disabled={geoLoading}
-					>
-						{geoLoading ? "Getting location..." : "Use my location"}
-					</Button>
-				</div>
-				{geoError && <p className="text-sm text-destructive">{geoError}</p>}
-				<LocationPicker
-					latitude={
-						latitude && Number.isFinite(Number(latitude))
-							? Number(latitude)
-							: null
-					}
-					longitude={
-						longitude && Number.isFinite(Number(longitude))
-							? Number(longitude)
-							: null
-					}
-					onLocationChange={(lat, lng) => {
-						setLatitude(String(lat));
-						setLongitude(String(lng));
-					}}
-				/>
-				<div className="grid grid-cols-2 gap-4">
+			<Card>
+				<CardHeader>
+					<CardTitle>{isEditing ? "Edit Pool" : "Add Pool"}</CardTitle>
+				</CardHeader>
+				<CardContent className="space-y-4">
 					<div className="space-y-1">
-						<Label htmlFor="latitude">Latitude *</Label>
+						<Label htmlFor="name">Name *</Label>
 						<Input
-							id="latitude"
-							type="number"
-							value={latitude}
-							onChange={(e) =>
-								setLatitude((e.target as HTMLInputElement).value)
-							}
-							placeholder="e.g. 33.4484"
-							step="any"
+							id="name"
+							value={name}
+							onChange={(e) => setName((e.target as HTMLInputElement).value)}
+							placeholder="e.g. Backyard Pool"
 						/>
-						{errors.latitude && (
-							<p className="text-sm text-destructive">{errors.latitude}</p>
+						{errors.name && (
+							<p className="text-sm text-destructive">{errors.name}</p>
 						)}
 					</div>
+
 					<div className="space-y-1">
-						<Label htmlFor="longitude">Longitude *</Label>
+						<Label htmlFor="volumeGallons">Volume (gallons) *</Label>
 						<Input
-							id="longitude"
+							id="volumeGallons"
 							type="number"
-							value={longitude}
+							value={volumeGallons}
 							onChange={(e) =>
-								setLongitude((e.target as HTMLInputElement).value)
+								setVolumeGallons((e.target as HTMLInputElement).value)
 							}
-							placeholder="e.g. -112.0740"
-							step="any"
+							placeholder="e.g. 15000"
 						/>
-						{errors.longitude && (
-							<p className="text-sm text-destructive">{errors.longitude}</p>
+						{errors.volumeGallons && (
+							<p className="text-sm text-destructive">{errors.volumeGallons}</p>
 						)}
 					</div>
-				</div>
-			</div>
 
-			<div className="space-y-1">
-				<Label htmlFor="surfaceType">Surface Type</Label>
-				<Select value={surfaceType} onValueChange={handleSurfaceTypeChange}>
-					<SelectTrigger id="surfaceType">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						{Object.entries(SURFACE_TYPE_LABELS).map(([value, label]) => (
-							<SelectItem key={value} value={value}>
-								{label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</div>
+					<div className="space-y-2">
+						<div className="flex items-center justify-between">
+							<Label>Location *</Label>
+							{/* @ts-expect-error @fx/ui Button children type */}
+							<Button
+								type="button"
+								variant="outline"
+								size="sm"
+								onClick={getLocation}
+								disabled={geoLoading}
+							>
+								{geoLoading ? "Getting location..." : "Use my location"}
+							</Button>
+						</div>
+						{geoError && <p className="text-sm text-destructive">{geoError}</p>}
+						<LocationPicker
+							latitude={
+								latitude && Number.isFinite(Number(latitude))
+									? Number(latitude)
+									: null
+							}
+							longitude={
+								longitude && Number.isFinite(Number(longitude))
+									? Number(longitude)
+									: null
+							}
+							onLocationChange={(lat, lng) => {
+								setLatitude(String(lat));
+								setLongitude(String(lng));
+							}}
+						/>
+						<div className="grid grid-cols-2 gap-4">
+							<div className="space-y-1">
+								<Label htmlFor="latitude">Latitude *</Label>
+								<Input
+									id="latitude"
+									type="number"
+									value={latitude}
+									onChange={(e) =>
+										setLatitude((e.target as HTMLInputElement).value)
+									}
+									placeholder="e.g. 33.4484"
+									step="any"
+								/>
+								{errors.latitude && (
+									<p className="text-sm text-destructive">{errors.latitude}</p>
+								)}
+							</div>
+							<div className="space-y-1">
+								<Label htmlFor="longitude">Longitude *</Label>
+								<Input
+									id="longitude"
+									type="number"
+									value={longitude}
+									onChange={(e) =>
+										setLongitude((e.target as HTMLInputElement).value)
+									}
+									placeholder="e.g. -112.0740"
+									step="any"
+								/>
+								{errors.longitude && (
+									<p className="text-sm text-destructive">{errors.longitude}</p>
+								)}
+							</div>
+						</div>
+					</div>
 
-			<div className="space-y-1">
-				<Label htmlFor="chlorineSource">Chlorine Source</Label>
-				<Select
-					value={chlorineSource}
-					onValueChange={handleChlorineSourceChange}
-				>
-					<SelectTrigger id="chlorineSource">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						{Object.entries(CHLORINE_SOURCE_LABELS).map(([value, label]) => (
-							<SelectItem key={value} value={value}>
-								{label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
-			</div>
+					<div className="space-y-1">
+						<Label htmlFor="surfaceType">Surface Type</Label>
+						<Select value={surfaceType} onValueChange={handleSurfaceTypeChange}>
+							<SelectTrigger id="surfaceType">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								{Object.entries(SURFACE_TYPE_LABELS).map(([value, label]) => (
+									<SelectItem key={value} value={value}>
+										{label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
 
-			<TreeCoverSlider
-				value={treeCoverPercent}
-				onChange={setTreeCoverPercent}
-			/>
+					<div className="space-y-1">
+						<Label htmlFor="chlorineSource">Chlorine Source</Label>
+						<Select
+							value={chlorineSource}
+							onValueChange={handleChlorineSourceChange}
+						>
+							<SelectTrigger id="chlorineSource">
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								{Object.entries(CHLORINE_SOURCE_LABELS).map(
+									([value, label]) => (
+										<SelectItem key={value} value={value}>
+											{label}
+										</SelectItem>
+									),
+								)}
+							</SelectContent>
+						</Select>
+					</div>
 
-			<div className="space-y-1">
-				<Label htmlFor="notes">Notes</Label>
-				<Textarea
-					id="notes"
-					value={notes}
-					onChange={(e) => setNotes(e.target.value)}
-					placeholder="Any additional notes about this pool..."
-					rows={3}
-				/>
-			</div>
+					<TreeCoverSlider
+						value={treeCoverPercent}
+						onChange={setTreeCoverPercent}
+					/>
+
+					<div className="space-y-1">
+						<Label htmlFor="notes">Notes</Label>
+						<Textarea
+							id="notes"
+							value={notes}
+							onChange={(e) => setNotes(e.target.value)}
+							placeholder="Any additional notes about this pool..."
+							rows={3}
+						/>
+					</div>
+				</CardContent>
+			</Card>
 
 			<div className="flex gap-2">
 				{/* @ts-expect-error @fx/ui Button children type */}

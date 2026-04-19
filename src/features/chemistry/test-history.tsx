@@ -56,7 +56,7 @@ function TestRow({
 	latestCya: number | null;
 }) {
 	return (
-		<div className="flex flex-wrap items-center gap-2 border-b py-2 last:border-b-0">
+		<div className="flex flex-wrap items-center gap-2 py-2">
 			<span className="text-xs text-muted-foreground w-full sm:w-auto">
 				{formatDate(test.testedAt)}
 			</span>
@@ -136,8 +136,7 @@ export function TestHistory() {
 		<div className="mx-auto max-w-2xl space-y-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">Test History — {pool.name}</h2>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild size="sm">
+				<Button asChild nativeButton={false} size="sm">
 					<Link href={`/pools/${pool.id}/test`}>Log Test</Link>
 				</Button>
 			</div>
@@ -163,8 +162,7 @@ export function TestHistory() {
 				</CardContent>
 			</Card>
 
-			{/* @ts-expect-error @fx/ui Button children type */}
-			<Button asChild variant="outline">
+			<Button asChild nativeButton={false} variant="outline">
 				<Link href={`/pools/${pool.id}`}>Back to pool</Link>
 			</Button>
 		</div>

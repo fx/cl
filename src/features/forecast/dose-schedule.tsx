@@ -31,7 +31,7 @@ export function DoseSchedule({ doseEvents }: DoseScheduleProps) {
 					{doseEvents.map((event) => (
 						<li
 							key={event.time}
-							className="flex items-center justify-between rounded border p-2 text-sm"
+							className="flex items-center justify-between rounded-lg border border-border bg-card p-3 text-sm shadow-sm"
 						>
 							<div>
 								<p className="font-medium">{formatDateTime(event.time)}</p>

@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from "@fx/ui";
+import { Alert, AlertDescription, AlertTitle, Button } from "@fx/ui";
 import { useState } from "react";
 import type { ForecastWarning } from "../../types";
 
@@ -37,14 +37,15 @@ export function WarningBanner({ warnings }: WarningBannerProps) {
 							<AlertTitle>{warning.title}</AlertTitle>
 							<AlertDescription>{warning.description}</AlertDescription>
 						</div>
-						<button
-							type="button"
+						<Button
+							variant="ghost"
+							size="icon"
 							onClick={() => dismiss(warning.type)}
-							className="ml-2 shrink-0 text-muted-foreground hover:text-foreground"
+							className="ml-2 shrink-0"
 							aria-label={`Dismiss ${warning.title}`}
 						>
 							✕
-						</button>
+						</Button>
 					</div>
 				</Alert>
 			))}

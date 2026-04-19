@@ -18,6 +18,12 @@ export function useGeolocation(): UseGeolocationReturn {
 	const [position, setPosition] = useState<Position | null>(null);
 
 	const getLocation = useCallback(() => {
+		if (!window.isSecureContext) {
+			setError("Geolocation requires a secure context (HTTPS).");
+			setLoading(false);
+			return;
+		}
+
 		if (!navigator.geolocation) {
 			setError("Geolocation is not supported by this browser.");
 			return;

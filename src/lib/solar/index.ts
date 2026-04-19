@@ -1,5 +1,5 @@
-import type { Pool, SunExposureResult } from "../../types";
 import { useSolarCacheStore } from "../../stores/solar-cache-store";
+import type { Pool, SunExposureResult } from "../../types";
 import { calculateEffectiveSunHours, calculateTreeFactor } from "./exposure";
 import { buildFallbackDay } from "./fallback";
 import { fetchSolarData, parseResponse } from "./open-meteo";
@@ -91,16 +91,16 @@ export async function computeSunExposure(
 	}
 }
 
-export { getSunTimes, getSunAltitude, getMaxSunAltitude } from "./suncalc";
+export {
+	calculateEffectiveSunHours,
+	calculatePSH,
+	calculateTreeFactor,
+} from "./exposure";
+export { buildFallbackDay, calculateCMF, estimatePSH } from "./fallback";
 export {
 	buildOpenMeteoUrl,
 	fetchSolarData,
-	parseResponse,
 	parseHourlyData,
+	parseResponse,
 } from "./open-meteo";
-export {
-	calculatePSH,
-	calculateTreeFactor,
-	calculateEffectiveSunHours,
-} from "./exposure";
-export { estimatePSH, calculateCMF, buildFallbackDay } from "./fallback";
+export { getMaxSunAltitude, getSunAltitude, getSunTimes } from "./suncalc";

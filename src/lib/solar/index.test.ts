@@ -1,7 +1,7 @@
 import { act } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenMeteoResponse, Pool } from "../../types";
 import { useSolarCacheStore } from "../../stores/solar-cache-store";
+import type { OpenMeteoResponse, Pool } from "../../types";
 import { computeSunExposure } from "./index";
 
 function createMockPool(overrides: Partial<Pool> = {}): Pool {
@@ -39,7 +39,9 @@ function createMockApiResponse(): OpenMeteoResponse {
 		for (let h = 0; h < 24; h++) {
 			times.push(`${dateStr}T${String(h).padStart(2, "0")}:00`);
 			const isDaytime = h >= 6 && h <= 18;
-			const ghi = isDaytime ? 500 + 100 * Math.sin(((h - 6) / 12) * Math.PI) : 0;
+			const ghi = isDaytime
+				? 500 + 100 * Math.sin(((h - 6) / 12) * Math.PI)
+				: 0;
 			shortwave.push(ghi);
 			direct.push(ghi * 0.7);
 			diffuse.push(ghi * 0.3);

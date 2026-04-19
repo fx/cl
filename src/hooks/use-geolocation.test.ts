@@ -7,6 +7,11 @@ describe("useGeolocation", () => {
 
 	beforeEach(() => {
 		vi.restoreAllMocks();
+		Object.defineProperty(window, "isSecureContext", {
+			value: true,
+			writable: true,
+			configurable: true,
+		});
 		Object.defineProperty(navigator, "geolocation", {
 			value: { getCurrentPosition: mockGetCurrentPosition },
 			writable: true,
@@ -97,6 +102,26 @@ describe("useGeolocation", () => {
 
 		expect(result.current.error).toBe("An unknown location error occurred.");
 		expect(result.current.loading).toBe(false);
+	});
+
+	it("sets error when context is not secure", () => {
+		Object.defineProperty(window, "isSecureContext", {
+			value: false,
+			writable: true,
+			configurable: true,
+		});
+
+		mockGetCurrentPosition.mockClear();
+		const { result } = renderHook(() => useGeolocation());
+		act(() => {
+			result.current.getLocation();
+		});
+
+		expect(result.current.error).toBe(
+			"Geolocation requires a secure context (HTTPS).",
+		);
+		expect(result.current.loading).toBe(false);
+		expect(mockGetCurrentPosition).not.toHaveBeenCalled();
 	});
 
 	it("sets error when geolocation is not supported", () => {

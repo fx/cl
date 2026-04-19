@@ -11,8 +11,7 @@ export function PoolEdit() {
 		return (
 			<div className="py-8 text-center">
 				<p className="text-muted-foreground">Pool not found</p>
-				{/* @ts-expect-error @fx/ui Button children type */}
-				<Button asChild variant="outline" className="mt-4">
+				<Button asChild nativeButton={false} variant="outline" className="mt-4">
 					<Link href="/">Back to pools</Link>
 				</Button>
 			</div>

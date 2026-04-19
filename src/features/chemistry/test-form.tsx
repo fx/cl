@@ -1,4 +1,6 @@
 import {
+	Alert,
+	AlertDescription,
 	Button,
 	Card,
 	CardContent,
@@ -10,6 +12,7 @@ import {
 } from "@fx/ui";
 import { useState } from "react";
 import { useLocation, useParams } from "wouter";
+import { generateId } from "../../lib/id";
 import { useAppStore } from "../../stores/app-store";
 import type { WaterTest } from "../../types";
 
@@ -100,7 +103,7 @@ export function TestForm() {
 
 		const now = new Date().toISOString();
 		const test: WaterTest = {
-			id: crypto.randomUUID(),
+			id: generateId(),
 			poolId: poolId,
 			testedAt: testedAt ? new Date(testedAt).toISOString() : now,
 			createdAt: now,
@@ -127,11 +130,13 @@ export function TestForm() {
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				{errors.length > 0 && (
-					<div className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300">
-						{errors.map((err) => (
-							<p key={err}>{err}</p>
-						))}
-					</div>
+					<Alert variant="destructive">
+						<AlertDescription>
+							{errors.map((err) => (
+								<p key={err}>{err}</p>
+							))}
+						</AlertDescription>
+					</Alert>
 				)}
 
 				<Card>
