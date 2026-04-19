@@ -1,10 +1,17 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { PoolNew } from "./pool-new";
 
+vi.mock("wouter", () => ({
+	useLocation: () => ["/pools/new", vi.fn()],
+	useParams: () => ({}),
+}));
+
 describe("PoolNew", () => {
-	it("renders placeholder text", () => {
+	it("renders the pool form", () => {
 		render(<PoolNew />);
-		expect(screen.getByText("New Pool")).toBeInTheDocument();
+		expect(
+			screen.getByRole("heading", { name: "Add Pool" }),
+		).toBeInTheDocument();
 	});
 });
