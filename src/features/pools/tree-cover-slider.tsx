@@ -1,0 +1,48 @@
+import { Label } from "@fx/ui";
+
+const PRESETS = [
+	{ value: 0, label: "0% — Full sun" },
+	{ value: 25, label: "25% — Sparse shade" },
+	{ value: 50, label: "50% — Partial shade" },
+	{ value: 75, label: "75% — Mostly shaded" },
+	{ value: 90, label: "90% — Dense canopy" },
+] as const;
+
+interface TreeCoverSliderProps {
+	value: number;
+	onChange: (value: number) => void;
+}
+
+export function TreeCoverSlider({ value, onChange }: TreeCoverSliderProps) {
+	return (
+		<div className="space-y-2">
+			<Label htmlFor="treeCover">Tree Cover: {value}%</Label>
+			<input
+				id="treeCover"
+				type="range"
+				min={0}
+				max={100}
+				step={1}
+				value={value}
+				onChange={(e) => onChange(Number(e.target.value))}
+				className="w-full"
+			/>
+			<div className="flex flex-wrap gap-2">
+				{PRESETS.map((preset) => (
+					<button
+						key={preset.value}
+						type="button"
+						onClick={() => onChange(preset.value)}
+						className={`rounded-md border px-2 py-1 text-xs transition-colors ${
+							value === preset.value
+								? "border-primary bg-primary text-primary-foreground"
+								: "border-border bg-background text-muted-foreground hover:bg-muted"
+						}`}
+					>
+						{preset.label}
+					</button>
+				))}
+			</div>
+		</div>
+	);
+}

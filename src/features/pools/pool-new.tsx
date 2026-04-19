@@ -1,3 +1,5 @@
+import { PoolForm } from "./pool-form";
+
 export function PoolNew() {
-	return <div>New Pool</div>;
+	return <PoolForm />;
 }
