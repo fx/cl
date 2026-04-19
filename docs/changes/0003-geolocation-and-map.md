@@ -5,7 +5,7 @@
 Add interactive map-based location picker for pool creation/editing and a static map display on the pool detail view. Integrate browser Geolocation API for "use my location" functionality.
 
 **Spec:** [Pool Management](../specs/pool-management/)
-**Status:** draft
+**Status:** implemented
 **Depends On:** 0002
 
 ## Motivation
@@ -85,16 +85,16 @@ The pool detail view MUST show a non-interactive map with the pool's location.
 
 ## Tasks
 
-- [ ] Install `leaflet`, `react-leaflet`, `@types/leaflet`
-- [ ] Create `LocationPicker` component — interactive map with draggable marker, click-to-place
-- [ ] Add "Use my location" button with browser Geolocation API integration
-- [ ] Handle geolocation permission denial gracefully (message + fallback to manual)
-- [ ] Create `PoolMap` component — static map with marker (non-draggable, minimal controls)
-- [ ] Integrate `LocationPicker` into `PoolForm` (replace raw lat/lng inputs, keep them as fallback)
-- [ ] Integrate `PoolMap` into `PoolDetail` view
-- [ ] Add Leaflet CSS loading (scoped to map components)
-- [ ] Write tests for geolocation hook (mock navigator.geolocation)
-- [ ] Write component test for LocationPicker (marker placement updates coordinates)
+- [x] Install `leaflet`, `react-leaflet`, `@types/leaflet`
+- [x] Create `LocationPicker` component — interactive map with draggable marker, click-to-place
+- [x] Add "Use my location" button with browser Geolocation API integration
+- [x] Handle geolocation permission denial gracefully (message + fallback to manual)
+- [x] Create `PoolMap` component — static map with marker (non-draggable, minimal controls)
+- [x] Integrate `LocationPicker` into `PoolForm` (replace raw lat/lng inputs, keep them as fallback)
+- [x] Integrate `PoolMap` into `PoolDetail` view
+- [x] Add Leaflet CSS loading (scoped to map components)
+- [x] Write tests for geolocation hook (mock navigator.geolocation)
+- [x] Write component test for LocationPicker (marker placement updates coordinates)
 
 ## Open Questions
 

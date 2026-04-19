@@ -9,11 +9,13 @@ import {
 	SelectValue,
 	Textarea,
 } from "@fx/ui";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { useGeolocation } from "../../hooks/use-geolocation";
 import { useAppStore } from "../../stores/app-store";
 import type { ChlorineSource, Pool, SurfaceType } from "../../types";
 import { CHLORINE_SOURCE_LABELS, SURFACE_TYPE_LABELS } from "../../types";
+import { LocationPicker } from "./location-picker";
 import { TreeCoverSlider } from "./tree-cover-slider";
 
 interface PoolFormProps {
@@ -85,8 +87,21 @@ export function PoolForm({ pool }: PoolFormProps) {
 	);
 	const [notes, setNotes] = useState(pool?.notes ?? "");
 	const [errors, setErrors] = useState<FormErrors>({});
+	const {
+		getLocation,
+		loading: geoLoading,
+		error: geoError,
+		position: geoPosition,
+	} = useGeolocation();
 
 	const isEditing = !!pool;
+
+	useEffect(() => {
+		if (geoPosition) {
+			setLatitude(String(geoPosition.latitude));
+			setLongitude(String(geoPosition.longitude));
+		}
+	}, [geoPosition]);
 
 	/* v8 ignore next 3 */
 	function handleSurfaceTypeChange(v: unknown) {
@@ -184,34 +199,70 @@ export function PoolForm({ pool }: PoolFormProps) {
 				)}
 			</div>
 
-			<div className="grid grid-cols-2 gap-4">
-				<div className="space-y-1">
-					<Label htmlFor="latitude">Latitude *</Label>
-					<Input
-						id="latitude"
-						type="number"
-						value={latitude}
-						onChange={(e) => setLatitude((e.target as HTMLInputElement).value)}
-						placeholder="e.g. 33.4484"
-						step="any"
-					/>
-					{errors.latitude && (
-						<p className="text-sm text-destructive">{errors.latitude}</p>
-					)}
+			<div className="space-y-2">
+				<div className="flex items-center justify-between">
+					<Label>Location *</Label>
+					{/* @ts-expect-error @fx/ui Button children type */}
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={getLocation}
+						disabled={geoLoading}
+					>
+						{geoLoading ? "Getting location..." : "Use my location"}
+					</Button>
 				</div>
-				<div className="space-y-1">
-					<Label htmlFor="longitude">Longitude *</Label>
-					<Input
-						id="longitude"
-						type="number"
-						value={longitude}
-						onChange={(e) => setLongitude((e.target as HTMLInputElement).value)}
-						placeholder="e.g. -112.0740"
-						step="any"
-					/>
-					{errors.longitude && (
-						<p className="text-sm text-destructive">{errors.longitude}</p>
-					)}
+				{geoError && <p className="text-sm text-destructive">{geoError}</p>}
+				<LocationPicker
+					latitude={
+						latitude && Number.isFinite(Number(latitude))
+							? Number(latitude)
+							: null
+					}
+					longitude={
+						longitude && Number.isFinite(Number(longitude))
+							? Number(longitude)
+							: null
+					}
+					onLocationChange={(lat, lng) => {
+						setLatitude(String(lat));
+						setLongitude(String(lng));
+					}}
+				/>
+				<div className="grid grid-cols-2 gap-4">
+					<div className="space-y-1">
+						<Label htmlFor="latitude">Latitude *</Label>
+						<Input
+							id="latitude"
+							type="number"
+							value={latitude}
+							onChange={(e) =>
+								setLatitude((e.target as HTMLInputElement).value)
+							}
+							placeholder="e.g. 33.4484"
+							step="any"
+						/>
+						{errors.latitude && (
+							<p className="text-sm text-destructive">{errors.latitude}</p>
+						)}
+					</div>
+					<div className="space-y-1">
+						<Label htmlFor="longitude">Longitude *</Label>
+						<Input
+							id="longitude"
+							type="number"
+							value={longitude}
+							onChange={(e) =>
+								setLongitude((e.target as HTMLInputElement).value)
+							}
+							placeholder="e.g. -112.0740"
+							step="any"
+						/>
+						{errors.longitude && (
+							<p className="text-sm text-destructive">{errors.longitude}</p>
+						)}
+					</div>
 				</div>
 			</div>
 

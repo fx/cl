@@ -8,8 +8,50 @@ vi.mock("wouter", () => ({
 	useParams: () => ({}),
 }));
 
+const mockGetLocation = vi.fn();
+let mockGeoLoading = false;
+let mockGeoError: string | null = null;
+let mockGeoPosition: { latitude: number; longitude: number } | null = null;
+
+vi.mock("../../hooks/use-geolocation", () => ({
+	useGeolocation: () => ({
+		getLocation: mockGetLocation,
+		loading: mockGeoLoading,
+		error: mockGeoError,
+		position: mockGeoPosition,
+	}),
+}));
+
+let mockOnLocationChange: ((lat: number, lng: number) => void) | null = null;
+
+vi.mock("./location-picker", () => ({
+	LocationPicker: ({
+		onLocationChange,
+		latitude,
+		longitude,
+	}: {
+		onLocationChange: (lat: number, lng: number) => void;
+		latitude: number | null;
+		longitude: number | null;
+	}) => {
+		mockOnLocationChange = onLocationChange;
+		return (
+			<div
+				data-testid="location-picker"
+				data-lat={latitude}
+				data-lng={longitude}
+			/>
+		);
+	},
+}));
+
 describe("PoolForm", () => {
 	beforeEach(() => {
+		mockGeoLoading = false;
+		mockGeoError = null;
+		mockGeoPosition = null;
+		mockGetLocation.mockClear();
+		mockOnLocationChange = null;
 		act(() => {
 			useAppStore.getState().reset();
 		});
@@ -268,5 +310,50 @@ describe("PoolForm", () => {
 		});
 		fireEvent.click(screen.getByRole("button", { name: "Add Pool" }));
 		expect(screen.getByText("Longitude is required")).toBeInTheDocument();
+	});
+
+	it("renders Use my location button", () => {
+		render(<PoolForm />);
+		expect(screen.getByText("Use my location")).toBeInTheDocument();
+	});
+
+	it("calls getLocation when Use my location is clicked", () => {
+		render(<PoolForm />);
+		fireEvent.click(screen.getByText("Use my location"));
+		expect(mockGetLocation).toHaveBeenCalled();
+	});
+
+	it("shows loading state on Use my location button", () => {
+		mockGeoLoading = true;
+		render(<PoolForm />);
+		expect(screen.getByText("Getting location...")).toBeInTheDocument();
+	});
+
+	it("shows geolocation error message", () => {
+		mockGeoError =
+			"Location access denied. Place your pool on the map or enter coordinates manually.";
+		render(<PoolForm />);
+		expect(screen.getByText(/Location access denied/)).toBeInTheDocument();
+	});
+
+	it("renders location picker", () => {
+		render(<PoolForm />);
+		expect(screen.getByTestId("location-picker")).toBeInTheDocument();
+	});
+
+	it("updates lat/lng when location picker changes", () => {
+		render(<PoolForm />);
+		act(() => {
+			mockOnLocationChange?.(40.123, -100.456);
+		});
+		expect(screen.getByLabelText("Latitude *")).toHaveValue(40.123);
+		expect(screen.getByLabelText("Longitude *")).toHaveValue(-100.456);
+	});
+
+	it("updates lat/lng from geolocation position", () => {
+		mockGeoPosition = { latitude: 35.0, longitude: -110.0 };
+		render(<PoolForm />);
+		expect(screen.getByLabelText("Latitude *")).toHaveValue(35);
+		expect(screen.getByLabelText("Longitude *")).toHaveValue(-110);
 	});
 });

@@ -20,6 +20,7 @@ import { evaluateChemistry } from "../../lib/chemistry/evaluate";
 import { useAppStore } from "../../stores/app-store";
 import type { ChemistryStatus, WaterTest } from "../../types";
 import { CHLORINE_SOURCE_LABELS, SURFACE_TYPE_LABELS } from "../../types";
+import { PoolMap } from "./pool-map";
 import { DosingCalculator } from "../chemistry/dosing-calculator";
 
 const emptyTests: WaterTest[] = [];
@@ -200,6 +201,15 @@ export function PoolDetail() {
 							<p className="mt-1">{pool.notes}</p>
 						</div>
 					)}
+				</CardContent>
+			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Location</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<PoolMap latitude={pool.latitude} longitude={pool.longitude} />
 				</CardContent>
 			</Card>
 
