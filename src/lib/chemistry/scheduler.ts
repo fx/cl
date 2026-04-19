@@ -24,7 +24,7 @@ export interface SchedulerInput {
  * Find the next evening (hour 18) at or after the given hour index.
  */
 function snapToEvening(hourIndex: number, startTime: Date): number {
-	const startHourOfDay = startTime.getHours();
+	const startHourOfDay = startTime.getUTCHours();
 
 	for (let h = hourIndex; h < 168; h++) {
 		const hourOfDay = (startHourOfDay + h) % 24;
@@ -74,12 +74,10 @@ export function findDoseEvents(input: SchedulerInput): DoseEvent[] {
 			);
 
 			const productAmount = dose?.formatted ?? "N/A";
-			// Convert to ml: fl oz * 29.5735 or oz * 28.3495 (weight — approximate)
-			const productAmountMl = dose
-				? dose.unit === "fl oz"
-					? Math.round(dose.amount * 29.5735)
-					: Math.round(dose.amount * 28.3495)
-				: 0;
+			// Only convert volume-based doses to milliliters.
+			// Weight-based oz doses must not be stored in a `*Ml` field.
+			const productAmountMl =
+				dose && dose.unit === "fl oz" ? Math.round(dose.amount * 29.5735) : 0;
 
 			events.push({
 				time: hourly[doseHour].time,
@@ -158,7 +156,8 @@ export function simulateWithDoses(
 
 			let fc = targetFc;
 			for (let j = doseHour + 1; j < updated.length; j++) {
-				fc = fc * Math.exp(-updated[j].kTotal * 1);
+				// Use previous hour's kTotal — it represents the decay rate during that hour's interval
+				fc = fc * Math.exp(-updated[j - 1].kTotal * 1);
 
 				// Check if there's already a future dose event at this hour
 				const existingDose = doseEvents.find((e) => e.time === updated[j].time);

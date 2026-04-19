@@ -96,11 +96,15 @@ describe("useForecast", () => {
 		expect(result.current).toBeNull();
 	});
 
-	it("returns null when tests are empty", () => {
+	it("returns forecast with test-needed action when tests are empty", () => {
 		const { result } = renderHook(() =>
 			useForecast(pool, [], sunExposure, now),
 		);
-		expect(result.current).toBeNull();
+		expect(result.current).not.toBeNull();
+		// biome-ignore lint/style/noNonNullAssertion: asserted not null above
+		expect(result.current!.nextAction.type).toBe("test");
+		// biome-ignore lint/style/noNonNullAssertion: asserted not null above
+		expect(result.current!.nextAction.priority).toBe("urgent");
 	});
 
 	it("returns ForecastResult with valid data", () => {

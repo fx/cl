@@ -29,7 +29,6 @@ export function useForecast(
 ): ForecastResult | null {
 	return useMemo(() => {
 		if (!pool || !sunExposure) return null;
-		if (tests.length === 0) return null;
 
 		return generateForecast(pool, tests, sunExposure, now);
 	}, [pool, tests, sunExposure, now]);
