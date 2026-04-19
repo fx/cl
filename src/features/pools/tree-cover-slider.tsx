@@ -1,4 +1,4 @@
-import { Label } from "@fx/ui";
+import { Button, Label } from "@fx/ui";
 
 const PRESETS = [
 	{ value: 0, label: "0% — Full sun" },
@@ -29,18 +29,14 @@ export function TreeCoverSlider({ value, onChange }: TreeCoverSliderProps) {
 			/>
 			<div className="flex flex-wrap gap-2">
 				{PRESETS.map((preset) => (
-					<button
+					<Button
 						key={preset.value}
-						type="button"
+						variant={value === preset.value ? "default" : "outline"}
+						size="sm"
 						onClick={() => onChange(preset.value)}
-						className={`rounded-md border px-2 py-1 text-xs transition-colors ${
-							value === preset.value
-								? "border-primary bg-primary text-primary-foreground"
-								: "border-border bg-background text-muted-foreground hover:bg-muted"
-						}`}
 					>
 						{preset.label}
-					</button>
+					</Button>
 				))}
 			</div>
 		</div>
