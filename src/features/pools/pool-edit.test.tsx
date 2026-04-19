@@ -4,11 +4,22 @@ import { useAppStore } from "../../stores/app-store";
 import type { Pool } from "../../types";
 import { PoolEdit } from "./pool-edit";
 
-const mockNavigate = vi.fn();
-
 vi.mock("wouter", () => ({
 	useParams: () => ({ id: "pool-1" }),
-	useLocation: () => ["/pools/pool-1/edit", mockNavigate],
+	useLocation: () => ["/pools/pool-1/edit", vi.fn()],
+	Link: ({
+		children,
+		href,
+		...props
+	}: {
+		children: React.ReactNode;
+		href: string;
+		className?: string;
+	}) => (
+		<a href={href} {...props}>
+			{children}
+		</a>
+	),
 }));
 
 const testPool: Pool = {
@@ -30,15 +41,15 @@ const testPool: Pool = {
 
 describe("PoolEdit", () => {
 	beforeEach(() => {
-		mockNavigate.mockClear();
 		act(() => {
 			useAppStore.getState().reset();
 		});
 	});
 
-	it("redirects when pool is not found", () => {
+	it("shows not found when pool does not exist", () => {
 		render(<PoolEdit />);
-		expect(mockNavigate).toHaveBeenCalledWith("/");
+		expect(screen.getByText("Pool not found")).toBeInTheDocument();
+		expect(screen.getByText("Back to pools")).toBeInTheDocument();
 	});
 
 	it("renders edit form when pool exists", () => {

@@ -12,7 +12,7 @@ export interface AppActions {
 	addPool: (pool: Pool) => void;
 	updatePool: (
 		id: PoolId,
-		updates: Partial<Omit<Pool, "id" | "createdAt">>,
+		updates: Partial<Omit<Pool, "id" | "createdAt" | "updatedAt">>,
 	) => void;
 	deletePool: (id: PoolId) => void;
 	addTestResult: (poolId: PoolId, test: WaterTest) => void;
@@ -66,12 +66,35 @@ export const useAppStore = create<AppState & AppActions>()(
 		}),
 		{
 			name: "cl-storage",
-			version: 1,
+			version: 2,
 			partialize: (state) => ({
 				pools: state.pools,
 				testResults: state.testResults,
 				preferences: state.preferences,
 			}),
+			migrate: (persisted, version) => {
+				if (version < 2) {
+					const state = persisted as AppState;
+					return {
+						...state,
+						pools: (state.pools ?? []).map((p) => {
+							const partial = p as Partial<Pool> & { createdAt: string };
+							return {
+								...p,
+								surfaceType: partial.surfaceType ?? ("plaster" as const),
+								chlorineSource: partial.chlorineSource ?? ("liquid" as const),
+								treeCoverPercent: partial.treeCoverPercent ?? 0,
+								isIndoor: partial.isIndoor ?? false,
+								targetFc: partial.targetFc ?? null,
+								targetPh: partial.targetPh ?? 7.4,
+								notes: partial.notes ?? "",
+								updatedAt: partial.updatedAt ?? partial.createdAt,
+							};
+						}),
+					};
+				}
+				return persisted as AppState & AppActions;
+			},
 		},
 	),
 );

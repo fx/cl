@@ -114,13 +114,12 @@ describe("PoolDetail", () => {
 		});
 		render(<PoolDetail />);
 		// Click the trigger to open dialog
-		const deleteButtons = screen.getAllByText("Delete");
+		const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
 		fireEvent.click(deleteButtons[0]);
-		// Click the confirm action button inside the dialog
-		const actionButton = document.querySelector(
-			"[data-slot='alert-dialog-action']",
-		) as HTMLElement;
-		fireEvent.click(actionButton);
+		// After dialog opens, a second Delete button appears as the confirm action
+		const allDeleteButtons = screen.getAllByRole("button", { name: "Delete" });
+		const confirmButton = allDeleteButtons[allDeleteButtons.length - 1];
+		fireEvent.click(confirmButton);
 		expect(useAppStore.getState().pools).toHaveLength(0);
 	});
 

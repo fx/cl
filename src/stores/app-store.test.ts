@@ -1,7 +1,7 @@
 import { act } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Pool, WaterTest } from "../types";
-import { useAppStore } from "./app-store";
+import { type AppState, useAppStore } from "./app-store";
 
 const testPool: Pool = {
 	id: "pool-1",
@@ -138,5 +138,101 @@ describe("useAppStore", () => {
 		const store = useAppStore;
 		expect(store.persist).toBeDefined();
 		expect(store.persist.getOptions().name).toBe("cl-storage");
+	});
+
+	describe("persist migration", () => {
+		// biome-ignore lint/style/noNonNullAssertion: migrate is always defined in our config
+		const migrate = useAppStore.persist.getOptions().migrate!;
+
+		it("migrates v1 state by adding default pool fields", () => {
+			const v1State = {
+				pools: [
+					{
+						id: "p1",
+						name: "Old Pool",
+						volumeGallons: 10000,
+						latitude: 33,
+						longitude: -112,
+						createdAt: "2025-06-01T00:00:00Z",
+					},
+				],
+				testResults: {},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v1State, 1) as AppState;
+			const pool = result.pools[0];
+			expect(pool.surfaceType).toBe("plaster");
+			expect(pool.chlorineSource).toBe("liquid");
+			expect(pool.treeCoverPercent).toBe(0);
+			expect(pool.isIndoor).toBe(false);
+			expect(pool.targetFc).toBeNull();
+			expect(pool.targetPh).toBe(7.4);
+			expect(pool.notes).toBe("");
+			expect(pool.updatedAt).toBe("2025-06-01T00:00:00Z");
+		});
+
+		it("preserves existing fields during v1 migration", () => {
+			const v1State = {
+				pools: [
+					{
+						id: "p1",
+						name: "Pool",
+						volumeGallons: 10000,
+						latitude: 33,
+						longitude: -112,
+						surfaceType: "vinyl",
+						chlorineSource: "swg",
+						treeCoverPercent: 50,
+						isIndoor: true,
+						targetFc: 5,
+						targetPh: 7.2,
+						notes: "existing",
+						createdAt: "2025-06-01T00:00:00Z",
+						updatedAt: "2025-07-01T00:00:00Z",
+					},
+				],
+				testResults: {},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v1State, 1) as AppState;
+			const pool = result.pools[0];
+			expect(pool.surfaceType).toBe("vinyl");
+			expect(pool.chlorineSource).toBe("swg");
+			expect(pool.treeCoverPercent).toBe(50);
+			expect(pool.isIndoor).toBe(true);
+			expect(pool.targetFc).toBe(5);
+			expect(pool.targetPh).toBe(7.2);
+			expect(pool.notes).toBe("existing");
+			expect(pool.updatedAt).toBe("2025-07-01T00:00:00Z");
+		});
+
+		it("handles empty pools array in v1 migration", () => {
+			const v1State = {
+				pools: [],
+				testResults: {},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v1State, 1) as AppState;
+			expect(result.pools).toEqual([]);
+		});
+
+		it("handles missing pools in v1 migration", () => {
+			const v1State = {
+				testResults: {},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v1State, 0) as AppState;
+			expect(result.pools).toEqual([]);
+		});
+
+		it("returns state as-is for version 2", () => {
+			const v2State = {
+				pools: [testPool],
+				testResults: {},
+				preferences: { units: "imperial" },
+			};
+			const result = migrate(v2State, 2);
+			expect(result).toBe(v2State);
+		});
 	});
 });
